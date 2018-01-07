@@ -1,0 +1,87 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.maragues.planner_kotlin"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            postprocessing {
+                removeUnusedCode false
+                removeUnusedResources false
+                obfuscate false
+                optimizeCode false
+                proguardFile 'proguard-rules.pro'
+            }
+        }
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+
+    sourceSets {
+        // used by Room, to test migrations
+        androidTest.assets.srcDirs +=
+                files("$projectDir/schemas".toString())
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
+
+    //Architecture components
+    implementation "android.arch.lifecycle:runtime:${rootProject.ext.lifecycleRuntime}"
+    implementation "android.arch.lifecycle:extensions:${rootProject.ext.archVersion}"
+    kapt "android.arch.lifecycle:compiler:${rootProject.ext.archVersion}"
+
+    //Room
+    implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
+    implementation "android.arch.persistence.room:rxjava2:$rootProject.roomVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+    androidTestImplementation "android.arch.persistence.room:testing:$rootProject.roomVersion"
+
+    //RxJava
+    implementation "io.reactivex.rxjava2:rxjava:" + rootProject.ext.rxJavaVersion
+    implementation 'io.reactivex.rxjava2:rxandroid:' + rootProject.ext.rxAndroidVersion
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    //Dagger
+
+    implementation 'com.google.dagger:dagger:' + rootProject.ext.daggerVersion
+    kapt 'com.google.dagger:dagger-compiler:' + rootProject.ext.daggerVersion
+    implementation "com.google.dagger:dagger-android:" + rootProject.ext.daggerVersion
+    implementation "com.google.dagger:dagger-android-support:" + rootProject.ext.daggerVersion
+    kapt 'com.google.dagger:dagger-android-processor:' + rootProject.ext.daggerVersion
+
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    implementation 'org.jsoup:jsoup:1.10.1'
+
+    testImplementation 'junit:junit:4.12'
+
+    testImplementation "org.mockito:mockito-core:" + rootProject.ext.mockitoVersion
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
