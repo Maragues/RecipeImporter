@@ -21,7 +21,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:contentDescription="recipe image"
+    android:scaleType="fitCenter"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/scrappedRecipeTitle"/>
+  <TextView
+    android:id="@+id/scrappedRecipeDescription"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/scrappedRecipeImage"
+    tools:text="Cocido Madrileño es lo mejor"/>
 </android.support.constraint.ConstraintLayout>

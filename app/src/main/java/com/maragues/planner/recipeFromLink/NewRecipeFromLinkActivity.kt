@@ -1,10 +1,12 @@
 package com.maragues.planner.recipeFromLink
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.content.Intent.EXTRA_SUBJECT
 import android.content.Intent.EXTRA_TEXT
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
+import android.support.v4.content.FileProvider
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.maragues.planner.common.BaseActivity
@@ -12,7 +14,10 @@ import com.maragues.planner.common.loadUrl
 import com.maragues.planner.recipeFromLink.RecipeFromLinkNavigator.Companion.NAVIGATE_TO_RECIPE_LIST_AND_FINISH
 import com.maragues.planner.recipes.RecipesListActivity
 import com.maragues.planner_kotlin.R
+import com.maragues.planner_kotlin.R.id.scrappedRecipeImage
+import com.maragues.planner_kotlin.R.id.scrappedRecipeTitle
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.activity_new_recipe_from_link.scrappedRecipeDescription
 import kotlinx.android.synthetic.main.activity_new_recipe_from_link.scrappedRecipeImage
 import kotlinx.android.synthetic.main.activity_new_recipe_from_link.scrappedRecipeTitle
 import javax.inject.Inject
@@ -87,8 +92,9 @@ class NewRecipeFromLinkActivity : BaseActivity() {
     }
 
     private fun render(viewState: RecipeFromLinkViewState) {
-        scrappedRecipeTitle.setText(viewState.scrappedRecipe.title)
+        scrappedRecipeTitle.text = viewState.scrappedRecipe.title
         scrappedRecipeImage.loadUrl(viewState.scrappedRecipe.image)
+        scrappedRecipeDescription.text = viewState.scrappedRecipe.description
     }
 
 

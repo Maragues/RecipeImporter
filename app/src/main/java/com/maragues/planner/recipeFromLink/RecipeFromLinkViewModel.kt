@@ -24,14 +24,8 @@ class RecipeFromLinkViewModel(val urlToScrap: String,
 
     internal fun viewStateObservable(): Observable<RecipeFromLinkViewState> {
         return viewStateBehaviorSubject
-                .doOnSubscribe({ emitRecipe() })
-                .hide();
-    }
-
-    private fun emitRecipe() {
-        viewStateBehaviorSubject.onNext(RecipeFromLinkViewState(ScrappedRecipe(recipeTitle,
-                "https://www.ecestaticos.com/imagestatic/clipping/1d7/d91/1d7d91ba3e947038084a2dca1b697901/como-hacer-el-cocido-madrileno-perfecto.jpg?mtime=1455722985"
-                , urlToScrap)))
+                .doOnSubscribe({ scrapRecipe() })
+                .hide()
     }
 
     @VisibleForTesting

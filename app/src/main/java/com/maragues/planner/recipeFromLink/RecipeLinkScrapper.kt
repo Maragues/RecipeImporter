@@ -29,19 +29,19 @@ class RecipeLinkScrapper
             title = document.title()
         }
 
-        var imageUrl: String? = null
+        var imageUrl = ""
         val metaOgImage = readOgProperty(document, "image")
         if (metaOgImage != null) {
             imageUrl = metaOgImage.attr("content")
         }
 
-        var description: String? = null
+        var description = ""
         val metaOgDescription = readOgProperty(document, "description")
         if (metaOgDescription != null) {
             description = metaOgDescription.attr("content")
         }
 
-        return ScrappedRecipe(title, "", url)
+        return ScrappedRecipe(title, url, imageUrl, description)
     }
 
     private fun readOgProperty(document: Document, property: String): Elements? {
