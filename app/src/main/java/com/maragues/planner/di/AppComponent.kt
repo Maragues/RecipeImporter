@@ -2,6 +2,7 @@ package com.maragues.planner.di
 
 import android.content.Context
 import com.maragues.planner.App
+import com.maragues.planner.interactors.InteractorsModule
 import com.maragues.planner.persistence.repositories.RepositoriesModule
 import com.maragues.planner.persistence.room.RoomModule
 import dagger.BindsInstance
@@ -18,6 +19,7 @@ import javax.inject.Singleton
     AppModule::class,
     BindingModule::class,
     RoomModule::class,
+    InteractorsModule::class,
     RepositoriesModule::class
 ])
 interface AppComponent {
@@ -31,5 +33,4 @@ interface AppComponent {
     }
 
     fun inject(app: App)
-
 }

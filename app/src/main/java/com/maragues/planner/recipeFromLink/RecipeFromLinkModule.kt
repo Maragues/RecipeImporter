@@ -1,7 +1,7 @@
 package com.maragues.planner.recipeFromLink
 
 import com.maragues.planner.di.ActivityScope
-import com.maragues.planner.persistence.repositories.RecipeRepository
+import com.maragues.planner.interactors.RecipeInteractor
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -35,9 +35,9 @@ class RecipeFromLinkModule {
         fun providesViewModelFactory(@Named(RECIPE_URL) url: String,
                                      @Named(RECIPE_TITLE) title: String,
                                      scrapper: RecipeLinkScrapper,
-                                     recipesRepository: RecipeRepository,
+                                     recipeInteractor: RecipeInteractor,
                                      recipeFromLinkNavigator: RecipeFromLinkNavigator): RecipeFromLinkViewModel.Factory {
-            return RecipeFromLinkViewModel.Factory(url, title, scrapper, recipesRepository, recipeFromLinkNavigator)
+            return RecipeFromLinkViewModel.Factory(url, title, scrapper, recipeInteractor, recipeFromLinkNavigator)
         }
     }
 }
