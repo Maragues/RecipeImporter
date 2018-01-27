@@ -1,5 +1,6 @@
 package com.maragues.planner.recipeFromLink
 
+import android.util.Log
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

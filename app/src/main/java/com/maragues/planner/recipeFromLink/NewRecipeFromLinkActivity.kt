@@ -6,6 +6,7 @@ import android.content.Intent.EXTRA_TEXT
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.support.v4.content.FileProvider
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -92,8 +93,11 @@ class NewRecipeFromLinkActivity : BaseActivity() {
     }
 
     private fun render(viewState: RecipeFromLinkViewState) {
+
+        Log.d("", "Loaded image is "+viewState.scrappedRecipe.image)
+
         scrappedRecipeTitle.text = viewState.scrappedRecipe.title
-        scrappedRecipeImage.loadUrl(viewState.scrappedRecipe.image)
+        if (!TextUtils.isEmpty(viewState.scrappedRecipe.image)) scrappedRecipeImage.loadUrl(viewState.scrappedRecipe.image)
         scrappedRecipeDescription.text = viewState.scrappedRecipe.description
     }
 

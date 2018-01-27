@@ -3,7 +3,11 @@
   <dimen name="activity_horizontal_margin">16dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
 
-  <!-- TEXT SIZES -->
+  <!-- RECIPE LIST -->
   <dimen name="text_size_title">20sp</dimen>
   <dimen name="recipe_list_grid_spacing">2dp</dimen>
+
+  <!-- RECIPE PLANNER -->
+  <dimen name="recipe_planner_grid_spacing_row">4dp</dimen>
+  <dimen name="recipe_planner_grid_spacing_column">2dp</dimen>
 </resources>

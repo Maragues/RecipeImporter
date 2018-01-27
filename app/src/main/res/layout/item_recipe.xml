@@ -14,12 +14,11 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:scaleType="centerCrop"
-    android:src="@android:drawable/ic_menu_save"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:src="@android:drawable/ic_menu_save"/>
+    tools:src="@color/colorAccent"/>
 
   <TextView
     android:id="@+id/recipeTitle"
@@ -40,5 +39,15 @@
     app:layout_constraintTop_toTopOf="parent"
     tools:text="Cocido madrileño"
     tools:textColor="@color/colorPrimary"/>
+
+  <ImageView
+    android:id="@+id/dragHandle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:src="@android:drawable/picture_frame"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -6,14 +6,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.widget.Toast
+import android.view.DragEvent
+import android.view.View
+import android.view.View.OnDragListener
 import com.maragues.planner.common.BaseActivity
-import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
 import com.maragues.planner_kotlin.R
 import com.maragues.planner_kotlin.R.layout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipeList
+import kotlinx.android.synthetic.main.activity_recipes_list.weekMenuDragAndDrop
 import javax.inject.Inject
 
 class RecipesListActivity : BaseActivity() {
@@ -32,9 +34,24 @@ class RecipesListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_recipes_list)
 
+        initDragAndrDropViews()
+
         initRecyclerView()
 
         subscribeToViewModel()
+
+//        weekMenuDragAndDrop.setOnDragListener(DragListener())
+    }
+
+    class DragListener : OnDragListener{
+        override fun onDrag(v: View?, event: DragEvent?): Boolean {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+    }
+
+    private fun initDragAndrDropViews() {
+
     }
 
     private fun subscribeToViewModel() {

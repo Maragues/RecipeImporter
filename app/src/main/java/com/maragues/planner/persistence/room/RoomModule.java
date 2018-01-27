@@ -15,8 +15,8 @@ public class RoomModule {
   @Provides
   @Singleton
   static RoomAppDatabase providesAppDatabase(Context context) {
-//    return Room.databaseBuilder(context, RoomAppDatabase.class, "planner")
-    return Room.inMemoryDatabaseBuilder(context, RoomAppDatabase.class)
+    return Room.databaseBuilder(context, RoomAppDatabase.class, "planner")
+//    return Room.inMemoryDatabaseBuilder(context, RoomAppDatabase.class)
         .build();
   }
 

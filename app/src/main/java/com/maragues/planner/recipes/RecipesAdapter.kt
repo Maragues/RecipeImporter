@@ -1,7 +1,13 @@
 package com.maragues.planner.recipes
 
+import android.content.ClipData
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.support.v7.widget.RecyclerView
+import android.view.MotionEvent
+import android.view.MotionEvent.ACTION_DOWN
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,6 +16,7 @@ import com.maragues.planner.common.loadUrl
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.recipes.RecipesAdapter.RecipeViewHolder
 import com.maragues.planner_kotlin.R
+import kotlinx.android.synthetic.main.item_recipe.view.dragHandle
 import kotlinx.android.synthetic.main.item_recipe.view.recipeImage
 import kotlinx.android.synthetic.main.item_recipe.view.recipeTitle
 
@@ -26,13 +33,45 @@ class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) -> Unit) : 
 
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.recipeTitle
-        val image: ImageView = itemView.recipeImage
+        val imageView: ImageView = itemView.recipeImage
+        val dragHandle: ImageView = itemView.dragHandle
+
+        private val dragListener = DragTouchListener()
 
         fun bind(recipe: Recipe, listener: (Recipe) -> Unit) = with(itemView) {
+            dragListener.recipeId = recipe.id
+            dragHandle.setOnTouchListener(dragListener)
+
             title.text = recipe.title
-            image.loadUrl(recipe.screenshot)
+            imageView.loadUrl(recipe.screenshot)
 
             setOnClickListener { listener(recipe) }
         }
+
+        inner class DragTouchListener(var recipeId: Long = 0) : OnTouchListener {
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    ACTION_DOWN -> {
+                        val clipData = ClipData.newPlainText("", "")
+
+                        val shadow = View.DragShadowBuilder(imageView)
+
+                        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                            v.startDragAndDrop(clipData, shadow, recipeId, 0)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            v.startDrag(clipData, shadow, recipeId, 0)
+                        }
+
+                        return true
+                    }
+                }
+
+                return false;
+            }
+
+        }
     }
+
+
 }
