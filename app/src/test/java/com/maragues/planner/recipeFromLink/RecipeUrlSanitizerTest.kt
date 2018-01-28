@@ -11,6 +11,7 @@ class RecipeUrlSanitizerTest {
 
         assertEquals(expectedUrl, RecipeUrlSanitizer().sanitize(fullUrl))
     }
+
     @Test
     fun sanitize_anotherUrlGoogleAmp() {
         val expectedUrl = "www.elconfidencial.com/amp/alma-corazon-vida/2016-02-18/como-hacer-el-cocido-madrileno-perfecto-en-tres-vuelcos_1154015/"

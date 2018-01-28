@@ -12,7 +12,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
 class RecipeFromLinkViewModel(val urlToScrap: String,
-                              val recipeTitle: String,
                               val recipeLinkScrapper: RecipeLinkScrapper,
                               val recipeInteractor: RecipeInteractor,
                               val navigator: RecipeFromLinkNavigator) : BaseViewModel() {
@@ -61,13 +60,12 @@ class RecipeFromLinkViewModel(val urlToScrap: String,
     }
 
     class Factory(private val urlToScrap: String,
-                  private val title: String,
                   private val recipeLinkScrapper: RecipeLinkScrapper,
                   private val recipeInteractor: RecipeInteractor,
                   private val navigator: RecipeFromLinkNavigator) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RecipeFromLinkViewModel(urlToScrap, title, recipeLinkScrapper, recipeInteractor, navigator) as T
+            return RecipeFromLinkViewModel(urlToScrap,  recipeLinkScrapper, recipeInteractor, navigator) as T
         }
     }
 

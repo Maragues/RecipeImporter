@@ -105,9 +105,5 @@ class NewRecipeFromLinkActivity : BaseActivity() {
     fun getUrlToParse(): String {
         return intent.getStringExtra(EXTRA_TEXT)
     }
-
-    fun getRecipeTitle(): String {
-        return intent.getStringExtra(EXTRA_SUBJECT)
-    }
 }
 

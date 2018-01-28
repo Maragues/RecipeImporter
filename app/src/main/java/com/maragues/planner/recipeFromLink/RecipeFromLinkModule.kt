@@ -13,7 +13,6 @@ class RecipeFromLinkModule {
     @ActivityScope
     @Module
     companion object {
-        const val RECIPE_TITLE = "recipe_title"
         const val RECIPE_URL = "recipe_url"
 
         @JvmStatic
@@ -25,19 +24,11 @@ class RecipeFromLinkModule {
 
         @JvmStatic
         @Provides
-        @Named(RECIPE_TITLE)
-        fun providesTitle(activity: NewRecipeFromLinkActivity): String {
-            return activity.getRecipeTitle()
-        }
-
-        @JvmStatic
-        @Provides
         fun providesViewModelFactory(@Named(RECIPE_URL) url: String,
-                                     @Named(RECIPE_TITLE) title: String,
                                      scrapper: RecipeLinkScrapper,
                                      recipeInteractor: RecipeInteractor,
                                      recipeFromLinkNavigator: RecipeFromLinkNavigator): RecipeFromLinkViewModel.Factory {
-            return RecipeFromLinkViewModel.Factory(url, title, scrapper, recipeInteractor, recipeFromLinkNavigator)
+            return RecipeFromLinkViewModel.Factory(url, scrapper, recipeInteractor, recipeFromLinkNavigator)
         }
     }
 }

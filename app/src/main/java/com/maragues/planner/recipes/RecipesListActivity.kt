@@ -15,7 +15,6 @@ import com.maragues.planner_kotlin.R
 import com.maragues.planner_kotlin.R.layout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipeList
-import kotlinx.android.synthetic.main.activity_recipes_list.weekMenuDragAndDrop
 import javax.inject.Inject
 
 class RecipesListActivity : BaseActivity() {
@@ -36,22 +35,15 @@ class RecipesListActivity : BaseActivity() {
 
         initDragAndrDropViews()
 
-        initRecyclerView()
+        initRecipesList()
 
         subscribeToViewModel()
 
 //        weekMenuDragAndDrop.setOnDragListener(DragListener())
     }
 
-    class DragListener : OnDragListener{
-        override fun onDrag(v: View?, event: DragEvent?): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-    }
-
     private fun initDragAndrDropViews() {
-
+        val hoveringAdapter = HoverWeekPlannerAdapter()
     }
 
     private fun subscribeToViewModel() {
@@ -64,7 +56,7 @@ class RecipesListActivity : BaseActivity() {
                 ))
     }
 
-    private fun initRecyclerView() {
+    private fun initRecipesList() {
         recipeList.layoutManager = GridLayoutManager(this, 2)
         recipeList.addItemDecoration(SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.recipe_list_grid_spacing)));
     }
