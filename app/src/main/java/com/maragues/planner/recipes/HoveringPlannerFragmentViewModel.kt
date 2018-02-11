@@ -1,26 +1,23 @@
 package com.maragues.planner.recipes
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.repositories.MealSlot
 import com.maragues.planner.persistence.repositories.MealSlotRepository
-import com.maragues.planner.persistence.repositories.RecipeRepository
 import com.maragues.planner.recipes.MealType.DINNER
 import com.maragues.planner.recipes.MealType.LUNCH
-import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.subjects.BehaviorSubject
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
-import timber.log.Timber
 
 /**
- * Created by miguelaragues on 28/1/18.
+ * Created by miguelaragues on 11/2/18.
  */
-class HoveringPlannerViewModel(val mealSlotRepository: MealSlotRepository) : BaseViewModel() {
+class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotRepository) : BaseViewModel() {
     companion object {
-        const val DAYS_DISPLAYED = 5L
+        const val DAYS_DISPLAYED = 4L
     }
 
     private val endDate = LocalDate.now()
@@ -71,5 +68,12 @@ class HoveringPlannerViewModel(val mealSlotRepository: MealSlotRepository) : Bas
                 }
 
         return mutableMap
+    }
+
+    class Factory(private val mealSlotRepository: MealSlotRepository) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HoveringPlannerFragmentViewModel(mealSlotRepository) as T
+        }
     }
 }

@@ -5,23 +5,31 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
-import android.view.DragEvent
-import android.view.View
-import android.view.View.OnDragListener
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
 import com.maragues.planner_kotlin.R
-import com.maragues.planner_kotlin.R.layout
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipeList
 import javax.inject.Inject
 
-class RecipesListActivity : BaseActivity() {
+class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
+
     companion object {
         fun createIntentAfterAddingRecipe(context: Context): Intent {
             return Intent(context, RecipesListActivity::class.java)
         }
+    }
+
+    @Inject
+    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return fragmentInjector
     }
 
     @Inject
@@ -31,7 +39,7 @@ class RecipesListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout.activity_recipes_list)
+        setContentView(R.layout.activity_recipes_list)
 
         initDragAndrDropViews()
 
@@ -43,7 +51,6 @@ class RecipesListActivity : BaseActivity() {
     }
 
     private fun initDragAndrDropViews() {
-        val hoveringAdapter = HoverWeekPlannerAdapter()
     }
 
     private fun subscribeToViewModel() {

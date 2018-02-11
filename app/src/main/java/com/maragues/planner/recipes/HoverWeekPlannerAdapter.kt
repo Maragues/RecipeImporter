@@ -8,6 +8,8 @@ import android.view.View
 import android.view.View.OnDragListener
 import android.view.ViewGroup
 import com.maragues.planner.common.inflate
+import com.maragues.planner.persistence.entities.Recipe
+import com.maragues.planner.persistence.repositories.MealSlot
 import com.maragues.planner.recipes.HoverWeekPlannerAdapter.MealViewHolder
 import com.maragues.planner_kotlin.R.layout
 
@@ -21,21 +23,27 @@ I don't think this is a good approach, since I need to somehow react to the user
 
  This'd mean having some kind of LinearLayout with [0-N]Recipes and 1 add. Dropping on recipe recplaces, dropping on Add, inserts
  */
-internal class HoverWeekPlannerAdapter constructor(val meals : List<HoveringMealViewState>) : Adapter<MealViewHolder>() {
+internal class HoverWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot, List<Recipe>>) : Adapter<MealViewHolder>() {
+
+    val mealSlots = mealSlotsAndRecipes.keys
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder =
             MealViewHolder(parent.inflate(layout.item_meal_planner_hover))
 
-    override fun onBindViewHolder(holder: MealViewHolder, position: Int) = holder.bind(meals[position])
+    override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
+        val mealSlot = mealSlots.elementAt(position)
 
-    override fun getItemCount(): Int = meals.size
+        holder.bind(mealSlot, mealSlotsAndRecipes[mealSlot]!!)
+    }
+
+    override fun getItemCount(): Int = mealSlotsAndRecipes.size
 
     class MealViewHolder(itemView: View) : ViewHolder(itemView) {
         init {
             itemView.setOnDragListener(DragEventListener())
         }
 
-        fun bind(meal: Meal) {
+        fun bind(mealSlot: MealSlot, recipes: List<Recipe>) {
 
         }
     }
@@ -81,6 +89,4 @@ internal class HoverWeekPlannerAdapter constructor(val meals : List<HoveringMeal
             return false
         }
     }
-
-    class Meal
 }

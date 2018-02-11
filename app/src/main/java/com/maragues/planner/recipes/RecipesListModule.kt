@@ -5,8 +5,8 @@ import com.maragues.planner.persistence.repositories.RecipeRepository
 import dagger.Module
 import dagger.Provides
 
-@Module
 @ActivityScope
+@Module(includes = [RecipesListFragmentsModule::class])
 class RecipesListModule {
 
     @Module

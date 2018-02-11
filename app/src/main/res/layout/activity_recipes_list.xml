@@ -16,12 +16,12 @@
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
 
-  <com.maragues.planner.recipes.HoveringPlannerRecyclerView
-    android:id="@+id/weekMenuDragAndDrop"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
+  <fragment
+    android:id="@+id/plannerFragment"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
     android:alpha="0"
+    android:name="com.maragues.planner.recipes.HoveringPlannerFragment"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"

@@ -1,6 +1,7 @@
 package com.maragues.planner.recipes
 
 import com.maragues.planner.persistence.entities.Recipe
+import com.maragues.planner.persistence.repositories.MealSlot
 import com.maragues.planner.recipes.MealType.DINNER
 import com.maragues.planner.recipes.MealType.LUNCH
 import org.threeten.bp.LocalDate
@@ -10,27 +11,19 @@ import org.threeten.bp.LocalDate
  */
 internal data class HoveringPlannerViewState(
         val visible: Boolean,
-        val meals: List<HoveringMealViewState>
+        val meals: Map<MealSlot, List<Recipe>>
 ) {
     companion object {
-        fun emptyForDays(daysToCreate: Int): HoveringPlannerViewState {
+        fun emptyForDays(daysToCreate: Long): HoveringPlannerViewState {
             val todayDate = LocalDate.now()
-            val meals: MutableList<HoveringMealViewState> = mutableListOf()
-            for (i in 0L until HoveringPlannerViewModel.DAYS_DISPLAYED) {
+            val mealsAndRecipes = mutableMapOf<MealSlot, List<Recipe>>()
+            for (i in 0L until daysToCreate) {
                 val date = todayDate.plusDays(i)
-                meals.add(HoveringMealViewState(date, LUNCH, listOf()))
-                meals.add(HoveringMealViewState(date, DINNER, listOf()))
+                mealsAndRecipes.put(MealSlot(date, LUNCH), listOf())
+                mealsAndRecipes.put(MealSlot(date, DINNER), listOf())
             }
 
-            return HoveringPlannerViewState(false, meals.toList())
+            return HoveringPlannerViewState(false, mealsAndRecipes)
         }
     }
-}
-
-internal data class HoveringMealViewState(val date: LocalDate,
-                                          val mealType: MealType,
-                                          val recipes: List<Recipe>)
-
-internal enum class MealType {
-    LUNCH, DINNER
 }

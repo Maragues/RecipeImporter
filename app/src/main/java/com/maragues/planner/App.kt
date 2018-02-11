@@ -4,6 +4,7 @@ import android.app.Application
 import com.maragues.planner.di.DaggerAppComponent
 import dagger.android.HasActivityInjector
 import android.app.Activity
+import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import javax.inject.Inject
@@ -16,6 +17,8 @@ class App : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+
+        Stetho.initializeWithDefaults(this);
 
         //Instantiate Dagger
         DaggerAppComponent.builder()

@@ -24,4 +24,9 @@ public class RoomModule {
   static RecipeDao providesRecipeDao(RoomAppDatabase appDatabase) {
     return appDatabase.recipeDao();
   }
+
+  @Provides
+  static MealSlotDao providesMealSlotDao(RoomAppDatabase appDatabase) {
+    return appDatabase.mealSlotDao();
+  }
 }

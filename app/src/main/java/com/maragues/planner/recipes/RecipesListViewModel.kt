@@ -16,9 +16,6 @@ import java.util.Collections
  * Created by miguelaragues on 7/1/18.
  */
 class RecipesListViewModel(val recipesRepository: RecipeRepository) : BaseViewModel() {
-    companion object {
-        const val DAYS_DISPLAYED = 5
-    }
 
     class Factory(val recipesRepository: RecipeRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
@@ -39,8 +36,7 @@ class RecipesListViewModel(val recipesRepository: RecipeRepository) : BaseViewMo
     }
 
     private fun initialViewState() = RecipesListViewState(
-            Collections.emptyList(),
-            HoveringPlannerViewState.emptyForDays(DAYS_DISPLAYED)
+            Collections.emptyList()
     )
 
     private fun loadRecipes() {

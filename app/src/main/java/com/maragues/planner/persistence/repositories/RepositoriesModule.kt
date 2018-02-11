@@ -11,4 +11,7 @@ abstract class RepositoriesModule {
 
     @Binds
     internal abstract fun bindsRecipeRepository(recipesRepositoryRoom: RecipesRepositoryRoomImpl): RecipeRepository
+
+    @Binds
+    internal abstract fun bindsMealSlotRepository(recipesRepositoryRoom: MealSlotRepositoryRoomImpl): MealSlotRepository
 }

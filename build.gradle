@@ -28,9 +28,9 @@ task clean(type: Delete) {
 
 ext {
     supportLibVersion = "27.0.2"
-    archVersion = "1.0.0"
+    archVersion = "1.1.0"
     roomVersion = "1.0.0"
-    lifecycleRuntime = "1.0.3"
+    lifecycleRuntime = "1.1.0"
 
     rxJavaVersion = "2.1.8"
     rxAndroidVersion = "2.0.1"

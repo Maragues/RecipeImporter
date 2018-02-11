@@ -16,6 +16,9 @@ abstract class RecipeDao {
     @Query("SELECT * FROM recipe")
     abstract fun readAll(): Flowable<List<Recipe>>
 
+    @Query("SELECT * FROM recipe WHERE id IN (:ids)")
+    abstract fun recipesByIds(ids: String): List<Recipe>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insert(recipe: Recipe)
 }
