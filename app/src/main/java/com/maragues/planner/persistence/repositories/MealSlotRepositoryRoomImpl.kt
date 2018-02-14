@@ -1,5 +1,6 @@
 package com.maragues.planner.persistence.repositories
 
+import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.room.MealSlotDao
 import com.maragues.planner.persistence.room.RecipeDao
@@ -13,6 +14,9 @@ import javax.inject.Inject
 internal class MealSlotRepositoryRoomImpl
 @Inject constructor(val mealSlotDao: MealSlotDao,
                     val recipeDao: RecipeDao) : MealSlotRepository {
+    override fun insert(mealSlotRecipe: MealSlotRecipe) {
+        mealSlotDao.insert(mealSlotRecipe)
+    }
 
     override fun mealsAndRecipesBetween(startDate: LocalDate,
                                         endDate: LocalDate): Flowable<Map<MealSlot, List<Recipe>>> {

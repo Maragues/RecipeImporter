@@ -44,7 +44,7 @@ class HoveringPlannerRecyclerView
 
             ACTION_DRAG_ENDED -> postDelayed({
                 alpha = 0f
-            }, 500)
+            }, 2000)
         }
 
         return false

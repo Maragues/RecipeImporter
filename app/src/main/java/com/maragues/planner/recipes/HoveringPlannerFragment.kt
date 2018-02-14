@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.maragues.planner.common.BaseFragment
 import com.maragues.planner_kotlin.R
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_hovering_planner.weekMenuDragAndDrop
 import javax.inject.Inject
 
@@ -34,6 +35,7 @@ class HoveringPlannerFragment : BaseFragment() {
         super.onResume()
 
         disposables().add(viewModel.viewStateObservable()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { render(it) },
                         Throwable::printStackTrace
@@ -49,5 +51,7 @@ class HoveringPlannerFragment : BaseFragment() {
     private fun render(viewState: HoveringPlannerViewState) {
         val hoveringAdapter = HoverWeekPlannerAdapter(viewState.meals)
         weekMenuDragAndDrop.adapter = hoveringAdapter
+
+        viewModel.addRecipeObservable(hoveringAdapter.recipeAddedObservable())
     }
 }

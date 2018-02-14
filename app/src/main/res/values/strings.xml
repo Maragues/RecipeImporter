@@ -1,4 +1,5 @@
 <resources>
   <string name="app_name">PlannerKotlin</string>
   <string name="save">Save</string>
+  <string name="hover_recipes_empty">No recipes</string>
 </resources>

@@ -52,7 +52,7 @@ class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) -> Unit) : 
             override fun onTouch(v: View, event: MotionEvent): Boolean {
                 when (event.action) {
                     ACTION_DOWN -> {
-                        val clipData = ClipData.newPlainText("", "")
+                        val clipData = ClipData.newPlainText("recipeId", recipeId.toString())
 
                         val shadow = View.DragShadowBuilder(imageView)
 

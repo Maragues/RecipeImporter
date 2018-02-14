@@ -3,4 +3,8 @@
   <color name="colorPrimary">#3F51B5</color>
   <color name="colorPrimaryDark">#303F9F</color>
   <color name="colorAccent">#FF4081</color>
+
+  <color name="weekPlannerLunchBG">#66f5ed52</color>
+  <color name="weekPlannerDinnerBG">#66e0454d</color>
+  <color name="weekPlannerAddBG">#665a73ff</color>
 </resources>

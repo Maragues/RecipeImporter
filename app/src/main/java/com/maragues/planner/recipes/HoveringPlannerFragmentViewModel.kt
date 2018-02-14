@@ -3,12 +3,15 @@ package com.maragues.planner.recipes
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.maragues.planner.common.BaseViewModel
+import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.repositories.MealSlot
 import com.maragues.planner.persistence.repositories.MealSlotRepository
 import com.maragues.planner.recipes.MealType.DINNER
 import com.maragues.planner.recipes.MealType.LUNCH
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.threeten.bp.LocalDate
 
@@ -21,7 +24,7 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
     }
 
     private val endDate = LocalDate.now()
-    private val startDate = endDate.plusDays(DAYS_DISPLAYED)
+    private val startDate = endDate.minusDays(DAYS_DISPLAYED)
 
     private val hoveringPlannerViewStateSubject: BehaviorSubject<HoveringPlannerViewState> = BehaviorSubject.create()
 
@@ -39,7 +42,8 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
                                 {
                                     hoveringPlannerViewStateSubject.onNext(
                                             HoveringPlannerViewState(
-                                                    hoveringPlannerViewStateSubject.value.visible,
+                                                    true,
+//                                                    hoveringPlannerViewStateSubject.value.visible,
                                                     it.invoke()
                                             ))
                                 },
@@ -75,5 +79,16 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return HoveringPlannerFragmentViewModel(mealSlotRepository) as T
         }
+    }
+
+    fun addRecipeObservable(recipeAddedObservable: Observable<MealSlotRecipe>) {
+        disposables().add(
+                recipeAddedObservable
+                        .observeOn(Schedulers.io())
+                        .subscribe(
+                                { mealSlotRepository.insert(it) },
+                                Throwable::printStackTrace
+                        )
+        )
     }
 }
