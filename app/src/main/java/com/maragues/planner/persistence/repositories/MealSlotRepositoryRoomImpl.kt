@@ -24,7 +24,11 @@ internal class MealSlotRepositoryRoomImpl
                 .map { mealsAndRecipeIDs ->
                     mealsAndRecipeIDs.associateBy(
                             { MealSlot(it.date, it.mealType) },
-                            { recipeDao.recipesByIds(it.recipeIds.joinToString { "," }) }
+                            {
+                                val commaSeparatedIds = it.recipeIds.joinToString(",")
+
+                                recipeDao.recipesByIds(commaSeparatedIds)
+                            }
                     )
                 }
     }
