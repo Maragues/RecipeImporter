@@ -5,9 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.repositories.RecipeRepository
-import com.maragues.planner.recipes.HoveringPlannerViewState.Companion
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.util.Collections

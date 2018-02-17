@@ -1,4 +1,4 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.recipes.model.MealSlot

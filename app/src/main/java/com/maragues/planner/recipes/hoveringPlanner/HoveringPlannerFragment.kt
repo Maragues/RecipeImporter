@@ -1,4 +1,4 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.maragues.planner.common.BaseFragment
+import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerFragmentViewModel.Factory
 import com.maragues.planner_kotlin.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_hovering_planner.weekMenuDragAndDrop
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class HoveringPlannerFragment : BaseFragment() {
 
     @Inject
-    lateinit var viewModelFactory: HoveringPlannerFragmentViewModel.Factory
+    lateinit var viewModelFactory: Factory
 
     private lateinit var viewModel: HoveringPlannerFragmentViewModel
 
@@ -49,7 +50,7 @@ class HoveringPlannerFragment : BaseFragment() {
     }
 
     private fun render(viewState: HoveringPlannerViewState) {
-        val hoveringAdapter = HoverWeekPlannerAdapter(viewState.meals)
+        val hoveringAdapter = HoveringWeekPlannerAdapter(viewState.meals)
         weekMenuDragAndDrop.adapter = hoveringAdapter
 
         viewModel.addRecipeObservable(hoveringAdapter.recipeAddedObservable())

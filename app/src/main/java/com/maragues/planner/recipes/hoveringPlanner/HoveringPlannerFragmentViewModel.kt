@@ -1,25 +1,31 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.support.annotation.VisibleForTesting
 import com.maragues.planner.common.BaseViewModel
+import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
-import com.maragues.planner.persistence.repositories.MealSlotRepository
 import com.maragues.planner.recipes.model.MealSlot
+import com.maragues.planner.persistence.repositories.MealSlotRepository
 import com.maragues.planner.recipes.model.MealType.DINNER
 import com.maragues.planner.recipes.model.MealType.LUNCH
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 
 /**
- * Created by miguelaragues on 28/1/18.
+ * Created by miguelaragues on 11/2/18.
  */
-class HoveringPlannerViewModel(val mealSlotRepository: MealSlotRepository) : BaseViewModel() {
+class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotRepository) : BaseViewModel() {
     companion object {
-        const val DAYS_DISPLAYED = 5L
+        const val DAYS_DISPLAYED = 4L
     }
 
-    private val endDate = LocalDate.now()
-    private val startDate = endDate.plusDays(DAYS_DISPLAYED)
+    private val startDate = LocalDate.now()
+    private val endDate = startDate.plusDays(DAYS_DISPLAYED)
 
     private val hoveringPlannerViewStateSubject: BehaviorSubject<HoveringPlannerViewState> = BehaviorSubject.create()
 
@@ -33,11 +39,14 @@ class HoveringPlannerViewModel(val mealSlotRepository: MealSlotRepository) : Bas
         disposables().add(
                 mealSlotRepository.mealsAndRecipesBetween(startDate, endDate)
                         .map { { addMissingMealSlots(it) } }
+                        .doFinally({ Timber.d("FragmentView model finalized subscription to mealsAndRecipesBetween") })
+                        .doOnSubscribe({ Timber.d("FragmentView model subscribed to mealsAndRecipesBetween") })
                         .subscribe(
                                 {
                                     hoveringPlannerViewStateSubject.onNext(
                                             HoveringPlannerViewState(
-                                                    hoveringPlannerViewStateSubject.value.visible,
+                                                    true,
+//                                                    hoveringPlannerViewStateSubject.value.visible,
                                                     it.invoke()
                                             ))
                                 },
@@ -50,7 +59,8 @@ class HoveringPlannerViewModel(val mealSlotRepository: MealSlotRepository) : Bas
         return HoveringPlannerViewState.emptyForDays(DAYS_DISPLAYED)
     }
 
-    private fun addMissingMealSlots(mealSlotAndRecipes: Map<MealSlot, List<Recipe>>): Map<MealSlot, List<Recipe>> {
+    @VisibleForTesting
+    fun addMissingMealSlots(mealSlotAndRecipes: Map<MealSlot, List<Recipe>>): Map<MealSlot, List<Recipe>> {
         val mutableMap = mutableMapOf<MealSlot, List<Recipe>>()
 
         (0L until DAYS_DISPLAYED)
@@ -61,10 +71,30 @@ class HoveringPlannerViewModel(val mealSlotRepository: MealSlotRepository) : Bas
 
                         if (!mealSlotAndRecipes.containsKey(mealSlot)) {
                             mutableMap.put(mealSlot, listOf())
+                        } else {
+                            mutableMap.put(mealSlot, mealSlotAndRecipes[mealSlot]!!)
                         }
                     }
                 }
 
         return mutableMap
+    }
+
+    class Factory(private val mealSlotRepository: MealSlotRepository) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HoveringPlannerFragmentViewModel(mealSlotRepository) as T
+        }
+    }
+
+    fun addRecipeObservable(recipeAddedObservable: Observable<MealSlotRecipe>) {
+        disposables().add(
+                recipeAddedObservable
+                        .observeOn(Schedulers.io())
+                        .subscribe(
+                                { mealSlotRepository.insert(it) },
+                                Throwable::printStackTrace
+                        )
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -13,8 +13,8 @@ import android.widget.TextView
 import com.maragues.planner.common.inflate
 import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
+import com.maragues.planner.recipes.hoveringPlanner.HoveringWeekPlannerAdapter.MealViewHolder
 import com.maragues.planner.recipes.model.MealSlot
-import com.maragues.planner.recipes.HoverWeekPlannerAdapter.MealViewHolder
 import com.maragues.planner_kotlin.R
 import com.maragues.planner_kotlin.R.color
 import io.reactivex.Observable
@@ -35,7 +35,7 @@ I don't think this is a good approach, since I need to somehow react to the user
 
  This'd mean having some kind of LinearLayout with [0-N]Recipes and 1 add. Dropping on recipe recplaces, dropping on Add, inserts
  */
-internal class HoverWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot, List<Recipe>>) : Adapter<MealViewHolder>() {
+internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot, List<Recipe>>) : Adapter<MealViewHolder>() {
 
     private val mealSlots = mealSlotsAndRecipes.keys
 

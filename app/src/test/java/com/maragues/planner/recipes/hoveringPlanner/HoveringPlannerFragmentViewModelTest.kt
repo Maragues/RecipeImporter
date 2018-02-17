@@ -1,17 +1,17 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import com.maragues.planner.persistence.entities.Recipe
-import com.maragues.planner.recipes.model.MealSlot
 import com.maragues.planner.persistence.repositories.MealSlotRepository
-import com.maragues.planner.recipes.HoveringPlannerFragmentViewModel.Companion.DAYS_DISPLAYED
+import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerFragmentViewModel.Companion.DAYS_DISPLAYED
+import com.maragues.planner.recipes.model.MealSlot
 import com.maragues.planner.recipes.model.MealType.DINNER
 import com.maragues.planner.recipes.model.MealType.LUNCH
 import com.maragues.planner.test.BaseUnitTest
-import org.junit.Assert.*
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.spy
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.spy
 import org.threeten.bp.LocalDate
 
 /**
@@ -20,8 +20,7 @@ import org.threeten.bp.LocalDate
 class HoveringPlannerFragmentViewModelTest : BaseUnitTest() {
     lateinit var viewModel: HoveringPlannerFragmentViewModel
 
-    @Mock
-    lateinit var mealSlotRepository: MealSlotRepository
+    val mealSlotRepository: MealSlotRepository = mock()
 
     override fun setUp() {
         super.setUp()
@@ -56,7 +55,7 @@ class HoveringPlannerFragmentViewModelTest : BaseUnitTest() {
         val mealSlotWithRecipe = MealSlot(today.plusDays(3), DINNER)
 
         val inputMap = mutableMapOf<MealSlot, List<Recipe>>()
-        val expectedRecipe = mock(Recipe::class.java)
+        val expectedRecipe: Recipe = mock()
         inputMap.put(mealSlotWithRecipe, listOf(expectedRecipe))
 
         val mapResult = viewModel.addMissingMealSlots(inputMap)
