@@ -29,7 +29,7 @@ class HoveringPlannerViewStateTest : BaseUnitTest() {
 
         val viewState = HoveringPlannerViewState.emptyForDays(days)
 
-        val expectedMeals = HoveringPlannerFragmentViewModel.DAYS_DISPLAYED * 2
+        val expectedMeals = days * 2
         assertEquals(expectedMeals.toInt(), viewState.meals.size)
 
         val today = LocalDate.now()
