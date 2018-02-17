@@ -6,6 +6,7 @@ import com.maragues.planner.persistence.room.MealSlotDao
 import com.maragues.planner.persistence.room.RecipeDao
 import io.reactivex.Flowable
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -22,6 +23,7 @@ internal class MealSlotRepositoryRoomImpl
                                         endDate: LocalDate): Flowable<Map<MealSlot, List<Recipe>>> {
         return mealSlotDao.mealsAndRecipeIdsBetween(startDate, endDate)
                 .map { mealsAndRecipeIDs ->
+                    Timber.d("Received new mealsAndRecipes")
                     mealsAndRecipeIDs.associateBy(
                             { MealSlot(it.date, it.mealType) },
                             {
@@ -31,5 +33,7 @@ internal class MealSlotRepositoryRoomImpl
                             }
                     )
                 }
+                .doFinally({ Timber.d("Repository Finalized subscription to mealsAndRecipesBetween")})
+                .doOnSubscribe({ Timber.d("Repository subscribed to mealsAndRecipesBetween")})
     }
 }

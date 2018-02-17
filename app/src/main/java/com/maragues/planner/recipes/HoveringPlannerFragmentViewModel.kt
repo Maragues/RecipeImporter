@@ -2,6 +2,7 @@ package com.maragues.planner.recipes
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import android.support.annotation.VisibleForTesting
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
@@ -10,10 +11,10 @@ import com.maragues.planner.persistence.repositories.MealSlotRepository
 import com.maragues.planner.recipes.MealType.DINNER
 import com.maragues.planner.recipes.MealType.LUNCH
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 
 /**
  * Created by miguelaragues on 11/2/18.
@@ -23,8 +24,8 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
         const val DAYS_DISPLAYED = 4L
     }
 
-    private val endDate = LocalDate.now()
-    private val startDate = endDate.minusDays(DAYS_DISPLAYED)
+    private val startDate = LocalDate.now()
+    private val endDate = startDate.plusDays(DAYS_DISPLAYED)
 
     private val hoveringPlannerViewStateSubject: BehaviorSubject<HoveringPlannerViewState> = BehaviorSubject.create()
 
@@ -38,6 +39,8 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
         disposables().add(
                 mealSlotRepository.mealsAndRecipesBetween(startDate, endDate)
                         .map { { addMissingMealSlots(it) } }
+                        .doFinally({ Timber.d("FragmentView model finalized subscription to mealsAndRecipesBetween") })
+                        .doOnSubscribe({ Timber.d("FragmentView model subscribed to mealsAndRecipesBetween") })
                         .subscribe(
                                 {
                                     hoveringPlannerViewStateSubject.onNext(
@@ -56,7 +59,8 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
         return HoveringPlannerViewState.emptyForDays(DAYS_DISPLAYED)
     }
 
-    private fun addMissingMealSlots(mealSlotAndRecipes: Map<MealSlot, List<Recipe>>): Map<MealSlot, List<Recipe>> {
+    @VisibleForTesting
+    fun addMissingMealSlots(mealSlotAndRecipes: Map<MealSlot, List<Recipe>>): Map<MealSlot, List<Recipe>> {
         val mutableMap = mutableMapOf<MealSlot, List<Recipe>>()
 
         (0L until DAYS_DISPLAYED)
@@ -67,6 +71,8 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
 
                         if (!mealSlotAndRecipes.containsKey(mealSlot)) {
                             mutableMap.put(mealSlot, listOf())
+                        } else {
+                            mutableMap.put(mealSlot, mealSlotAndRecipes[mealSlot]!!)
                         }
                     }
                 }

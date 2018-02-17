@@ -90,6 +90,9 @@ internal class HoverWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot, Li
         fun bind(mealSlot: MealSlot, recipes: List<Recipe>) {
             this.mealSlot = mealSlot
 
+            if(!recipes.isEmpty())
+                Timber.d("")
+
             determineEmptyVisibility(recipes)
 
             determineRecipesBackground(mealSlot)

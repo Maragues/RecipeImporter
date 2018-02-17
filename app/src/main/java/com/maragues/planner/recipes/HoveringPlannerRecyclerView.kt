@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_ENDED
 import android.view.DragEvent.ACTION_DRAG_STARTED
+import android.view.View
 import com.maragues.planner.ui.recyclerView.RowsAndColumnsItemDecoration
 import com.maragues.planner_kotlin.R.dimen
 
@@ -37,13 +38,13 @@ class HoveringPlannerRecyclerView
     override fun onDragEvent(event: DragEvent): Boolean {
         when (event.action) {
             ACTION_DRAG_STARTED -> {
-                alpha = 1f
+                (parent as View).alpha = 1f
 
                 return true
             }
 
             ACTION_DRAG_ENDED -> postDelayed({
-                alpha = 0f
+                (parent as View).alpha = 0f
             }, 2000)
         }
 

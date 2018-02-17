@@ -3,14 +3,16 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:alpha="0"
+  android:background="#99000000">
 
   <com.maragues.planner.recipes.HoveringPlannerRecyclerView
     android:id="@+id/weekMenuDragAndDrop"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:alpha="0"
     android:layout_margin="@dimen/activity_horizontal_margin"
+    android:background="@android:color/white"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
