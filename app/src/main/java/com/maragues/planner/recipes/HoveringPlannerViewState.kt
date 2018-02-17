@@ -1,9 +1,9 @@
 package com.maragues.planner.recipes
 
 import com.maragues.planner.persistence.entities.Recipe
-import com.maragues.planner.persistence.repositories.MealSlot
-import com.maragues.planner.recipes.MealType.DINNER
-import com.maragues.planner.recipes.MealType.LUNCH
+import com.maragues.planner.recipes.model.MealSlot
+import com.maragues.planner.recipes.model.MealType.DINNER
+import com.maragues.planner.recipes.model.MealType.LUNCH
 import org.threeten.bp.LocalDate
 
 /**

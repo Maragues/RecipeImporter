@@ -2,24 +2,23 @@ package com.maragues.planner.recipeFromLink
 
 import com.maragues.planner.interactors.RecipeInteractor
 import com.maragues.planner.test.BaseUnitTest
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doNothing
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.spy
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
-import org.junit.Assert.*
 import org.junit.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.any
-import org.mockito.Mockito.doNothing
-import org.mockito.Mockito.eq
-import org.mockito.Mockito.spy
-import org.mockito.Mockito.verify
 
 class RecipeFromLinkViewModelTest : BaseUnitTest() {
     lateinit var viewModel: RecipeFromLinkViewModel
 
-    @Mock lateinit var scrapper: RecipeLinkScrapper
-    @Mock lateinit var navigator: RecipeFromLinkNavigator
-    @Mock lateinit var interactor: RecipeInteractor
+    val scrapper: RecipeLinkScrapper = mock()
+
+    val navigator: RecipeFromLinkNavigator = mock()
+
+    val interactor: RecipeInteractor = mock()
 
     val DEFAULT_URL = "ignorable"
 
@@ -44,9 +43,14 @@ class RecipeFromLinkViewModelTest : BaseUnitTest() {
 
     @Test
     fun scrapRecipe_invokesScrapeForUrl() {
+        val scrappedRecipe: ScrappedRecipe = mock()
+        whenever(scrapper.scrape(any())).thenReturn(Single.just(scrappedRecipe))
+
+        doNothing().`when`(viewModel).onRecipeScrapped(scrappedRecipe)
+
         viewModel.scrapRecipe()
 
-        verify(scrapper).scrape(eq(DEFAULT_URL))
+        verify(scrapper).scrape(DEFAULT_URL)
     }
 
     @Test
@@ -54,13 +58,13 @@ class RecipeFromLinkViewModelTest : BaseUnitTest() {
         val expectedTitle = "expected"
         val expectedRecipe = ScrappedRecipe(expectedTitle, "image", DEFAULT_URL, "description")
 
-        `when`(scrapper.scrape(DEFAULT_URL)).thenReturn(Single.just(expectedRecipe))
+        whenever(scrapper.scrape(DEFAULT_URL)).thenReturn(Single.just(expectedRecipe))
 
-        doNothing().`when`(viewModel).onRecipeScrapped(any(ScrappedRecipe::class.java))
+        doNothing().whenever(viewModel).onRecipeScrapped(any())
 
         viewModel.scrapRecipe()
 
-        verify(viewModel).onRecipeScrapped(ArgumentMatchers.eq(expectedRecipe))
+        verify(viewModel).onRecipeScrapped(expectedRecipe)
     }
 
     /*

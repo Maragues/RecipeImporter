@@ -10,6 +10,7 @@ class RecipeUrlSanitizerTest {
         val fullUrl = "https://www.google.es/amp/amp.recetasderechupete.com/cocido-madrileno/6531"
 
         assertEquals(expectedUrl, RecipeUrlSanitizer().sanitize(fullUrl))
+
     }
 
     @Test

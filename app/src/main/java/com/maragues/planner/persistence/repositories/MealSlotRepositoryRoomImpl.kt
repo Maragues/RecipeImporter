@@ -4,6 +4,7 @@ import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.room.MealSlotDao
 import com.maragues.planner.persistence.room.RecipeDao
+import com.maragues.planner.recipes.model.MealSlot
 import io.reactivex.Flowable
 import org.threeten.bp.LocalDate
 import timber.log.Timber

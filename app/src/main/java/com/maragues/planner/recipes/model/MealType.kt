@@ -1,6 +1,7 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.model
 
-import com.maragues.planner.recipes.MealType.DINNER
+import com.maragues.planner.recipes.model.MealType.DINNER
+
 
 /**
  * Created by miguelaragues on 12/2/18.

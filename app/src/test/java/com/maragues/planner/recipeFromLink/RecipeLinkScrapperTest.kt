@@ -1,16 +1,15 @@
 package com.maragues.planner.recipeFromLink
 
 import com.maragues.planner.test.BaseUnitTest
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.observers.TestObserver
-import org.junit.Assert.*
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
 
 class RecipeLinkScrapperTest : BaseUnitTest() {
     lateinit var scrapper: RecipeLinkScrapper
 
-    @Mock lateinit var sanitizer: RecipeUrlSanitizer
+     var sanitizer: RecipeUrlSanitizer = mock()
 
     override fun setUp() {
         super.setUp()
@@ -30,11 +29,8 @@ class RecipeLinkScrapperTest : BaseUnitTest() {
     }
 
     private fun testUrl(url: String): TestObserver<ScrappedRecipe> {
-        Mockito.`when`(sanitizer.sanitize(url)).thenReturn(url)
+        whenever(sanitizer.sanitize(url)).thenReturn(url)
 
         return scrapper.scrape(url).test()
     }
 }
-
-// pected: ScrappedRecipe(title=Bil Shareyah o arroz con fideos. Receta de raíces egipcias, link=https://i.blogs.es/4dea6c/arroz-con-fideos/840_560.jpg, image=https://www.directoalpaladar.com/recetas-de-salsas-y-guarniciones/bil-shareyah-o-arroz-con-fideos-receta-de-raices-egipcias, description=Te explicamos paso a paso, de manera sencilla, cómo elaborar la receta de arroz con fideos. Tiempo de elaboración, ingredientes,) (class: ScrappedRecipe),
-// Actual: ScrappedRecipe(title=Bil Shareyah o arroz con fideos. Receta de raíces egipcias, link=https://www.directoalpaladar.com/recetas-de-salsas-y-guarniciones/bil-shareyah-o-arroz-con-fideos-receta-de-raices-egipcias, image=https://i.blogs.es/4dea6c/arroz-con-fideos/840_560.jpg, description=Te explicamos paso a paso, de manera sencilla, cómo elaborar la receta de arroz con fideos. Tiempo de elaboración, ingredientes,)

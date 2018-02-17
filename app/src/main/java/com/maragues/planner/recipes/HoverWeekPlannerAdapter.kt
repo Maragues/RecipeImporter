@@ -13,7 +13,7 @@ import android.widget.TextView
 import com.maragues.planner.common.inflate
 import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
-import com.maragues.planner.persistence.repositories.MealSlot
+import com.maragues.planner.recipes.model.MealSlot
 import com.maragues.planner.recipes.HoverWeekPlannerAdapter.MealViewHolder
 import com.maragues.planner_kotlin.R
 import com.maragues.planner_kotlin.R.color

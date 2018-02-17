@@ -5,9 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.maragues.planner.persistence.entities.MealSlotRecipe
-import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.relationships.MealSlotsAndRecipeIds
-import com.maragues.planner.recipes.MealType
 import io.reactivex.Flowable
 import org.threeten.bp.LocalDate
 

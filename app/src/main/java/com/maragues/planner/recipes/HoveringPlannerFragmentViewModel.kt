@@ -6,10 +6,10 @@ import android.support.annotation.VisibleForTesting
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
-import com.maragues.planner.persistence.repositories.MealSlot
+import com.maragues.planner.recipes.model.MealSlot
 import com.maragues.planner.persistence.repositories.MealSlotRepository
-import com.maragues.planner.recipes.MealType.DINNER
-import com.maragues.planner.recipes.MealType.LUNCH
+import com.maragues.planner.recipes.model.MealType.DINNER
+import com.maragues.planner.recipes.model.MealType.LUNCH
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject

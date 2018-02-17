@@ -1,7 +1,7 @@
 package com.maragues.planner.persistence.room
 
 import android.arch.persistence.room.TypeConverter
-import com.maragues.planner.recipes.MealType
+import com.maragues.planner.recipes.model.MealType
 import org.threeten.bp.LocalDate
 
 /**

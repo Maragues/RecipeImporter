@@ -2,18 +2,13 @@ package com.maragues.planner.recipes
 
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.persistence.entities.Recipe
-import com.maragues.planner.persistence.repositories.MealSlot
 import com.maragues.planner.persistence.repositories.MealSlotRepository
-import com.maragues.planner.persistence.repositories.RecipeRepository
-import com.maragues.planner.recipes.MealType.DINNER
-import com.maragues.planner.recipes.MealType.LUNCH
-import io.reactivex.Flowable
+import com.maragues.planner.recipes.model.MealSlot
+import com.maragues.planner.recipes.model.MealType.DINNER
+import com.maragues.planner.recipes.model.MealType.LUNCH
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.subjects.BehaviorSubject
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
-import timber.log.Timber
 
 /**
  * Created by miguelaragues on 28/1/18.

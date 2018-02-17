@@ -2,7 +2,7 @@ package com.maragues.planner.persistence.entities
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
-import com.maragues.planner.recipes.MealType
+import com.maragues.planner.recipes.model.MealType
 import org.threeten.bp.LocalDate
 
 /**
