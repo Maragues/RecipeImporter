@@ -1,7 +1,8 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import com.maragues.planner.di.FragmentScope
 import com.maragues.planner.persistence.repositories.MealSlotRepository
+import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerFragmentViewModel.Factory
 import dagger.Module
 import dagger.Provides
 
@@ -17,8 +18,8 @@ class HoveringPlannerFragmentModule {
 
         @JvmStatic
         @Provides
-        fun providesViewModelFactory(mealSlotRepository: MealSlotRepository): HoveringPlannerFragmentViewModel.Factory {
-            return HoveringPlannerFragmentViewModel.Factory(mealSlotRepository)
+        fun providesViewModelFactory(mealSlotRepository: MealSlotRepository): Factory {
+            return Factory(mealSlotRepository)
         }
     }
 }

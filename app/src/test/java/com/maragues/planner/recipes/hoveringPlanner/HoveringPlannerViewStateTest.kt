@@ -1,10 +1,11 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import com.maragues.planner.recipes.model.MealSlot
 import com.maragues.planner.recipes.model.MealType.DINNER
 import com.maragues.planner.recipes.model.MealType.LUNCH
 import com.maragues.planner.test.BaseUnitTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.threeten.bp.LocalDate
 
@@ -28,7 +29,7 @@ class HoveringPlannerViewStateTest : BaseUnitTest() {
 
         val viewState = HoveringPlannerViewState.emptyForDays(days)
 
-        val expectedMeals = HoveringPlannerViewModel.DAYS_DISPLAYED * 2
+        val expectedMeals = HoveringPlannerFragmentViewModel.DAYS_DISPLAYED * 2
         assertEquals(expectedMeals.toInt(), viewState.meals.size)
 
         val today = LocalDate.now()

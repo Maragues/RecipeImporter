@@ -7,7 +7,7 @@
   android:alpha="0"
   android:background="#99000000">
 
-  <com.maragues.planner.recipes.HoveringPlannerRecyclerView
+  <com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerRecyclerView
     android:id="@+id/weekMenuDragAndDrop"
     android:layout_width="0dp"
     android:layout_height="0dp"

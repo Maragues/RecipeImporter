@@ -30,10 +30,6 @@ open class BaseUnitTest {
 
     @Rule
     @JvmField
-    val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
-    @Rule
-    @JvmField
     val mOverrideSchedulersRule = ImmediateRxSchedulersOverrideRule()
 
     @Before

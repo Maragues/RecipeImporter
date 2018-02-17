@@ -1,4 +1,4 @@
-package com.maragues.planner.recipes
+package com.maragues.planner.recipes.hoveringPlanner
 
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
