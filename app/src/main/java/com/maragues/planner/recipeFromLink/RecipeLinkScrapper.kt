@@ -1,6 +1,5 @@
 package com.maragues.planner.recipeFromLink
 
-import android.util.Log
 import io.reactivex.Single
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -12,13 +11,13 @@ import javax.inject.Inject
  */
 class RecipeLinkScrapper
 @Inject constructor(val urlSanitizer: RecipeUrlSanitizer) {
-    internal fun scrape(url: String): Single<ScrappedRecipe> {
+    internal fun scrape(url: String): Single<ScrapedRecipe> {
         return Single.fromCallable({
             parseRecipe(urlSanitizer.sanitize(url))
         })
     }
 
-    private fun parseRecipe(url: String): ScrappedRecipe {
+    private fun parseRecipe(url: String): ScrapedRecipe {
         val connection = Jsoup.connect(url)
         val document = connection.get()
 
@@ -42,7 +41,7 @@ class RecipeLinkScrapper
             description = metaOgDescription.attr("content")
         }
 
-        return ScrappedRecipe(title, url, imageUrl, description)
+        return ScrapedRecipe(title, url, imageUrl, description)
     }
 
     private fun readOgProperty(document: Document, property: String): Elements? {

@@ -19,10 +19,9 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-
     <activity
       android:launchMode="singleTop"
-      android:name="com.maragues.planner.recipeFromLink.NewRecipeFromLinkActivity">
+      android:name="com.maragues.planner.recipeFromLink.NewRecipeActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEND"/>
 
@@ -32,7 +31,6 @@
         <data android:mimeType="text/plain"/>
       </intent-filter>
     </activity>
-
   </application>
 
 </manifest>

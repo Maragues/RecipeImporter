@@ -1,9 +1,7 @@
 package com.maragues.planner.recipeFromLink
 
-import org.junit.Assert.*
 import org.junit.Test
 
-@android.support.test.filters.LargeTest
 class RecipeUrlSanitizerTest {
     @Test
     fun sanitize_urlGoogleAmp() {
