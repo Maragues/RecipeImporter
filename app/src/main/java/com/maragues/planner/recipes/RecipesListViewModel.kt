@@ -9,18 +9,12 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.util.Collections
+import javax.inject.Inject
 
 /**
  * Created by miguelaragues on 7/1/18.
  */
 class RecipesListViewModel(val recipesRepository: RecipeRepository) : BaseViewModel() {
-
-    class Factory(val recipesRepository: RecipeRepository) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RecipesListViewModel(recipesRepository) as T
-        }
-    }
 
     private val recipeListViewStateSubject: BehaviorSubject<RecipesListViewState> = BehaviorSubject.create()
 
@@ -48,5 +42,13 @@ class RecipesListViewModel(val recipesRepository: RecipeRepository) : BaseViewMo
 
     private fun onRecipesLoaded(recipes: List<Recipe>) {
         recipeListViewStateSubject.onNext(viewState.withRecipes(recipes))
+    }
+
+    class Factory
+    @Inject constructor(val recipesRepository: RecipeRepository) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return RecipesListViewModel(recipesRepository) as T
+        }
     }
 }

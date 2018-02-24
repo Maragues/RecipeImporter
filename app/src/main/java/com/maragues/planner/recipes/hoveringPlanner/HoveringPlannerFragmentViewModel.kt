@@ -15,6 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import org.threeten.bp.LocalDate
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by miguelaragues on 11/2/18.
@@ -80,13 +81,6 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
         return mutableMap
     }
 
-    class Factory(private val mealSlotRepository: MealSlotRepository) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HoveringPlannerFragmentViewModel(mealSlotRepository) as T
-        }
-    }
-
     fun addRecipeObservable(recipeAddedObservable: Observable<MealSlotRecipe>) {
         disposables().add(
                 recipeAddedObservable
@@ -96,5 +90,13 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
                                 Throwable::printStackTrace
                         )
         )
+    }
+
+    class Factory
+    @Inject constructor(private val mealSlotRepository: MealSlotRepository) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HoveringPlannerFragmentViewModel(mealSlotRepository) as T
+        }
     }
 }

@@ -34,6 +34,7 @@ ext {
 
     rxJavaVersion = "2.1.8"
     rxAndroidVersion = "2.0.1"
+    replayShareVersion = "2.0.1"
 
     daggerVersion = "2.14.1"
 

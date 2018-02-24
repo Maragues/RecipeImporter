@@ -2,4 +2,9 @@
   <string name="app_name">PlannerKotlin</string>
   <string name="save">Save</string>
   <string name="hover_recipes_empty">No recipes</string>
+  <string name="new_recipe_description_hint">Describe your recipe</string>
+  <string name="new_recipe_title_hint">Name your recipe</string>
+  <string name="new_recipe_url_hint">Link to the recipe</string>
+  <string name="title_activity_temp">TempActivity</string>
+  <string name="single_field_dialog_save">Save</string>
 </resources>

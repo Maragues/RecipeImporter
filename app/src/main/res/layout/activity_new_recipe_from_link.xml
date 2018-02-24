@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+  android:id="@+id/newRecipeRoot"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -8,29 +9,41 @@
   android:paddingTop="@dimen/activity_vertical_margin"
   android:paddingStart="@dimen/activity_horizontal_margin"
   android:paddingEnd="@dimen/activity_horizontal_margin">
-  <TextView
-    android:id="@+id/scrappedRecipeTitle"
-    android:layout_width="match_parent"
+
+  <EditText
+    android:id="@+id/newRecipeTitle"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:drawablePadding="5dp"
+    android:drawableRight="@drawable/ic_link"
+    android:hint="@string/new_recipe_title_hint"
+    android:inputType="textMultiLine"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:text="Cocido Madrileño"/>
+
   <ImageView
-    android:id="@+id/scrappedRecipeImage"
+    android:id="@+id/newRecipeImage"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:contentDescription="recipe image"
     android:scaleType="fitCenter"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/scrappedRecipeTitle"/>
-  <TextView
-    android:id="@+id/scrappedRecipeDescription"
-    android:layout_width="match_parent"
+    app:layout_constraintTop_toBottomOf="@id/newRecipeTitle"/>
+
+  <EditText
+    android:id="@+id/newRecipeDescription"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:hint="@string/new_recipe_description_hint"
+    android:inputType="textMultiLine"
+    android:maxLines="3"
+    android:singleLine="false"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/scrappedRecipeImage"
+    app:layout_constraintTop_toBottomOf="@id/newRecipeImage"
     tools:text="Cocido Madrileño es lo mejor"/>
 </android.support.constraint.ConstraintLayout>

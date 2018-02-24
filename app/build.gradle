@@ -66,6 +66,7 @@ dependencies {
     //RxJava
     implementation "io.reactivex.rxjava2:rxjava:" + rootProject.ext.rxJavaVersion
     implementation 'io.reactivex.rxjava2:rxandroid:' + rootProject.ext.rxAndroidVersion
+    implementation 'com.jakewharton.rx2:replaying-share:' + rootProject.ext.replayShareVersion
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
 

@@ -25,10 +25,10 @@ class RecipeLinkScrapperTest : BaseUnitTest() {
         val expectedImage = "https://i.blogs.es/4dea6c/arroz-con-fideos/840_560.jpg"
         val observer = testUrl(link)
 
-        observer.assertValue(ScrappedRecipe(expectedTitle, link, expectedImage, expectedDescription))
+        observer.assertValue(ScrapedRecipe(expectedTitle, link, expectedImage, expectedDescription))
     }
 
-    private fun testUrl(url: String): TestObserver<ScrappedRecipe> {
+    private fun testUrl(url: String): TestObserver<ScrapedRecipe> {
         whenever(sanitizer.sanitize(url)).thenReturn(url)
 
         return scrapper.scrape(url).test()

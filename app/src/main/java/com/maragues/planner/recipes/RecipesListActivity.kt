@@ -7,14 +7,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.view.DragEvent
+import android.view.View
 import com.maragues.planner.common.BaseActivity
+import com.maragues.planner.recipeFromLink.NewRecipeActivity
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
 import com.maragues.planner_kotlin.R
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_recipes_list.recipeList
+import kotlinx.android.synthetic.main.activity_recipes_list.recipesListFab
+import kotlinx.android.synthetic.main.activity_recipes_list.toolbar
+import kotlinx.android.synthetic.main.content_recipes_list.recipeList
 import javax.inject.Inject
 
 class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
@@ -40,14 +45,39 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipes_list)
+        setSupportActionBar(toolbar)
+
+        initFAB()
 
         initDragAndrDropViews()
 
         initRecipesList()
 
         subscribeToViewModel()
+    }
 
-//        weekMenuDragAndDrop.setOnDragListener(DragListener())
+    private fun initFAB() {
+        recipesListFab.setOnDragListener({ view: View, dragEvent: DragEvent ->
+            when (dragEvent.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    view.visibility = View.GONE
+
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    view.visibility = View.VISIBLE
+
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        })
+
+        recipesListFab.setOnClickListener({
+            startActivity(NewRecipeActivity.createIntent(this))
+        })
     }
 
     private fun initDragAndrDropViews() {
