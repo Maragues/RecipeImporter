@@ -6,6 +6,7 @@ import com.jakewharton.rx.ReplayingShare
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.interactors.RecipeInteractor
 import com.maragues.planner.persistence.entities.Recipe
+import com.maragues.planner.persistence.entities.Tag
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -21,7 +22,7 @@ internal class NewRecipeViewModel(
 
     private val viewStateBehaviorSubject = BehaviorSubject.create<CreateRecipeViewState>()
 
-    private val actionIdSubject = BehaviorSubject.create<Long>()
+    private val actionIdSubject = BehaviorSubject.create<Int>()
     private val userTypedUrlSubject = PublishSubject.create<String>()
 
     private var viewStateObservable: Observable<CreateRecipeViewState>? = null
@@ -47,12 +48,14 @@ internal class NewRecipeViewModel(
                 .map {
                     when (it) {
                         ACTION_SHOW_URL_DIALOG -> ShowUrlAction()
+                        ACTION_SHOW_ADD_TAG_DIALOG -> ShowAddTagDialogAction()
                         else -> {
                             NoAction()
                         }
                     }
                 }
                 .concatMap { Observable.just(it, NoAction()) }
+                .distinctUntilChanged()
     }
 
     internal fun viewStateObservable(): Observable<CreateRecipeViewState> {
@@ -110,5 +113,13 @@ internal class NewRecipeViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return NewRecipeViewModel(urlToScrap, recipeLinkScrapper, recipeInteractor, navigator) as T
         }
+    }
+
+    fun onAddTagClicked() {
+        actionIdSubject.onNext(ACTION_SHOW_ADD_TAG_DIALOG)
+    }
+
+    fun onTagSelected(tag: Tag) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

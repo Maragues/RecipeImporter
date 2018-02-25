@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-  android:id="@+id/newRecipeRoot"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/newRecipeRoot"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:paddingTop="@dimen/activity_vertical_margin"
@@ -46,4 +46,28 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/newRecipeImage"
     tools:text="Cocido Madrileño es lo mejor"/>
+
+  <TextView
+    android:id="@+id/newRecipeAddTag"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/min_touch_zone"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:background="@drawable/shape_chip_bakground"
+    android:drawableStart="@drawable/ic_add"
+    android:gravity="center"
+    android:text="@string/tag"
+    android:textColor="@android:color/white"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/newRecipeDescription"/>
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/newRecipeTagRecyclerView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_marginStart="@dimen/activity_horizontal_margin"
+    app:layout_constraintBottom_toBottomOf="@id/newRecipeAddTag"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/newRecipeAddTag"
+    app:layout_constraintTop_toBottomOf="@id/newRecipeDescription"/>
 </android.support.constraint.ConstraintLayout>

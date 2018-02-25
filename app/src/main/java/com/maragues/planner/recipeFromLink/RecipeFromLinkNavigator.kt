@@ -21,15 +21,15 @@ class RecipeFromLinkNavigator
         navigationIdSubject.onNext(NavigateAction(NAVIGATE_TO_RECIPE_LIST_AND_FINISH))
     }
 
-    internal data class NavigateAction(@NavigateId val navigateId: Long)
+    internal data class NavigateAction(@NavigateId val navigateId: Int)
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)
         @IntDef(EXIT, NAVIGATE_TO_RECIPE_LIST_AND_FINISH)
         internal annotation class NavigateId
 
-        const val EXIT = 0L
-        const val NAVIGATE_TO_RECIPE_LIST_AND_FINISH = 1L
+        const val EXIT = 0
+        const val NAVIGATE_TO_RECIPE_LIST_AND_FINISH = 1
 
     }
 }

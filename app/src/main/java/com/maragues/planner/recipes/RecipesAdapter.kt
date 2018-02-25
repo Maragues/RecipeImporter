@@ -23,15 +23,14 @@ import kotlinx.android.synthetic.main.item_recipe.view.recipeTitle
 /**
  * Created by miguelaragues on 6/1/18.
  */
-class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder =
-            RecipeViewHolder(parent.inflate(R.layout.item_recipe))
+internal class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = RecipeViewHolder(parent.inflate(R.layout.item_recipe))
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) = holder.bind(items[position], listener)
 
     override fun getItemCount(): Int = items.size
 
-    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    internal class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.recipeTitle
         val imageView: ImageView = itemView.recipeImage
         val dragHandle: ImageView = itemView.dragHandle

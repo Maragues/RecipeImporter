@@ -18,7 +18,7 @@ import javax.inject.Inject
 class HoveringPlannerFragment : BaseFragment() {
 
     @Inject
-    lateinit var viewModelFactory: Factory
+    internal lateinit var viewModelFactory: Factory
 
     private lateinit var viewModel: HoveringPlannerFragmentViewModel
 
