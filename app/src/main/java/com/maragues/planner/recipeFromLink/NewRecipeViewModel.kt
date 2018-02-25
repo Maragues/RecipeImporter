@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 internal class NewRecipeViewModel(
@@ -21,6 +22,7 @@ internal class NewRecipeViewModel(
     private val viewStateBehaviorSubject = BehaviorSubject.create<CreateRecipeViewState>()
 
     private val actionIdSubject = BehaviorSubject.create<Long>()
+    private val userTypedUrlSubject = PublishSubject.create<String>()
 
     private var viewStateObservable: Observable<CreateRecipeViewState>? = null
 
@@ -36,8 +38,8 @@ internal class NewRecipeViewModel(
                 .startWith(ScrapInProgress(urlToScrap))
     }
 
-    internal fun onLinkClicked() {
-        actionIdSubject.onNext(ACTION_SHOW_URL_DIALOG)
+    private fun userTypedUrlObservable(): Observable<CreateRecipePartialViewState> {
+        return userTypedUrlSubject.map { UserTypedUrl(it) }
     }
 
     private fun actionIdObservable(): Observable<CreateRecipePartialViewState> {
@@ -50,11 +52,16 @@ internal class NewRecipeViewModel(
                         }
                     }
                 }
+                .concatMap { Observable.just(it, NoAction()) }
     }
 
     internal fun viewStateObservable(): Observable<CreateRecipeViewState> {
         if (viewStateObservable == null) {
-            val partialStateObservable = Observable.merge(scrappedRecipeObservable(), actionIdObservable())
+            val partialStateObservable = Observable.merge(
+                    scrappedRecipeObservable(),
+                    userTypedUrlObservable(),
+                    actionIdObservable()
+            )
 
             val initialState = CreateRecipeViewState.EMPTY
 
@@ -86,7 +93,11 @@ internal class NewRecipeViewModel(
     }
 
     fun userClickedUrlIcon() {
+        actionIdSubject.onNext(ACTION_SHOW_URL_DIALOG)
+    }
 
+    fun userEnteredNewRecipeLink(newLink: CharSequence) {
+        if (!newLink.isEmpty()) userTypedUrlSubject.onNext(newLink.toString())
     }
 
     class Factory

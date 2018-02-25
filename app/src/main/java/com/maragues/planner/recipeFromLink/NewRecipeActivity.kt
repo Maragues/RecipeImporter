@@ -10,7 +10,6 @@ import android.support.annotation.NonNull
 import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_LONG
 import android.support.v4.app.DialogFragment
-import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -21,7 +20,6 @@ import com.maragues.planner.recipeFromLink.RecipeFromLinkNavigator.Companion.NAV
 import com.maragues.planner.recipes.RecipesListActivity
 import com.maragues.planner.ui.utils.ProgressFragmentDialog
 import com.maragues.planner_kotlin.R
-import com.maragues.planner_kotlin.R.id.newRecipeRoot
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeDescription
 import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeImage
@@ -41,6 +39,8 @@ class NewRecipeActivity : BaseActivity() {
 
     @Inject
     lateinit var navigator: RecipeFromLinkNavigator
+
+    private var progressDialog: ProgressFragmentDialog? = null
 
     companion object {
         fun createIntent(@NonNull context: Context): Intent {
@@ -69,15 +69,16 @@ class NewRecipeActivity : BaseActivity() {
 
     private fun initViews() {
         newRecipeTitle.setOnTouchListener({ _: View, event: MotionEvent ->
+            var handled = false
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= (newRecipeTitle.right - newRecipeTitle.compoundDrawables[2].bounds.width())) {
                     viewModel.userClickedUrlIcon()
 
-                    true
+                    handled = true
                 }
             }
 
-            false
+            handled
         })
     }
 
@@ -134,6 +135,28 @@ class NewRecipeActivity : BaseActivity() {
         renderScrapError(viewState)
 
         renderScrapedRecipe(viewState)
+
+        renderAction(viewState)
+    }
+
+    private fun renderAction(viewState: CreateRecipeViewState) {
+        when (viewState.actionId) {
+            ACTION_SHOW_URL_DIALOG -> showLinkDialog(viewState)
+        }
+    }
+
+    private fun showLinkDialog(viewState: CreateRecipeViewState) {
+        val singleFieldDialogFragment = SingleFieldDialogFragment.newInstance(viewState.scrapedRecipe.link)
+
+        disposables().add(singleFieldDialogFragment.fieldObservable()
+                .onTerminateDetach()
+                .filter({ urlFromField -> urlFromField != viewState.scrapedRecipe.link })
+                .subscribe(
+                        { viewModel.userEnteredNewRecipeLink(it) },
+                        Throwable::printStackTrace
+                ))
+
+        singleFieldDialogFragment.show(supportFragmentManager, SingleFieldDialogFragment.TAG)
     }
 
     private fun renderScrapedRecipe(viewState: CreateRecipeViewState) {
@@ -161,8 +184,6 @@ class NewRecipeActivity : BaseActivity() {
         }
     }
 
-    private var progressDialog: ProgressFragmentDialog? = null
-
     private fun showScrapInProgress() {
         if (findProgressDialogDisplayed() == null) {
             progressDialog = ProgressFragmentDialog.newInstance()
@@ -171,7 +192,11 @@ class NewRecipeActivity : BaseActivity() {
     }
 
     private fun hideScrapInProgress() {
-        progressDialog?.dismiss()
+        if (progressDialog != null) {
+            progressDialog?.dismiss()
+
+            progressDialog = null
+        }
     }
 
     private fun findProgressDialogDisplayed() =
