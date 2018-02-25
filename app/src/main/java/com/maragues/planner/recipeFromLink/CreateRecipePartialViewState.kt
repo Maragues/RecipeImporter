@@ -42,3 +42,9 @@ internal class ShowUrlAction : CreateRecipePartialViewState() {
         return previousState.withAction(ACTION_SHOW_URL_DIALOG)
     }
 }
+
+internal data class UserTypedUrl(val url: String) : CreateRecipePartialViewState() {
+    override fun computeViewState(previousState: CreateRecipeViewState): CreateRecipeViewState {
+        return previousState.withScrappedRecipe(previousState.scrapedRecipe.withLink(url))
+    }
+}

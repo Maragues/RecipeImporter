@@ -17,7 +17,7 @@ internal data class CreateRecipeViewState(
     }
 
     fun withScrappedRecipe(scrappedRecipe: ScrapedRecipe): CreateRecipeViewState {
-        return CreateRecipeViewState(scrappedRecipe, false, actionId, errorLoadingScrappedRecipe)
+        return CreateRecipeViewState(scrappedRecipe, false, actionId, "")
     }
 
     fun withErrorScrappingRecipe(error: String): CreateRecipeViewState {
@@ -25,7 +25,7 @@ internal data class CreateRecipeViewState(
     }
 
     fun withAction(@ActionId actionId: Long): CreateRecipeViewState {
-        return CreateRecipeViewState(scrapedRecipe, scrapInProgress, actionId, errorLoadingScrappedRecipe)
+        return CreateRecipeViewState(scrapedRecipe, scrapInProgress, actionId, "")
     }
 }
 
