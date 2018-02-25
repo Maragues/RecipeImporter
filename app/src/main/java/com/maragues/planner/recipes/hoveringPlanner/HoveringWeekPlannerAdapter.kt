@@ -57,7 +57,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
         return holder
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
 
         disposables.dispose()
@@ -90,7 +90,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
         fun bind(mealSlot: MealSlot, recipes: List<Recipe>) {
             this.mealSlot = mealSlot
 
-            if(!recipes.isEmpty())
+            if (!recipes.isEmpty())
                 Timber.d("")
 
             determineEmptyVisibility(recipes)

@@ -7,4 +7,9 @@
   <string name="new_recipe_url_hint">Link to the recipe</string>
   <string name="title_activity_temp">TempActivity</string>
   <string name="single_field_dialog_save">Save</string>
+  <string name="tag">TAG</string>
+  <string name="add_tag_dialog_title">Select or create tag</string>
+  <string name="add_tag_hint">Type to filter or create</string>
+  <string name="add_tag_create">Create</string>
+  <string name="add_tag_empty">Create your first tag! Type above and press create</string>
 </resources>
