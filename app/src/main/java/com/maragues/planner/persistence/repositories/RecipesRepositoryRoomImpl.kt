@@ -4,6 +4,8 @@ import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.room.RecipeDao
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
+import java.util.concurrent.Callable
 import javax.inject.Inject
 
 /**
@@ -16,9 +18,7 @@ internal class RecipesRepositoryRoomImpl
         return recipeDao.readAll()
     }
 
-    override fun save(recipe: Recipe): Completable {
-        return Completable.fromAction({
-            recipeDao.insert(recipe)
-        })
+    override fun save(recipe: Recipe): Single<Long> {
+        return Single.fromCallable({ recipeDao.insert(recipe) })
     }
 }

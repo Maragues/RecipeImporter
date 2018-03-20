@@ -17,4 +17,8 @@
 
   <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+  <style name="TagTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+    <item name="android:textColor">#FFFFFF</item>
+  </style>
+
 </resources>

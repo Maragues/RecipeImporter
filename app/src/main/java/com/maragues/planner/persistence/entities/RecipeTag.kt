@@ -2,8 +2,6 @@ package com.maragues.planner.persistence.entities
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
-import com.maragues.planner.recipes.model.MealType
-import org.threeten.bp.LocalDate
 
 /**
  * Created by miguelaragues on 11/2/18.
@@ -24,7 +22,7 @@ import org.threeten.bp.LocalDate
                 )
         )
 )
-data class RecipeTags(
-        val tagName: Tag,
+data class RecipeTag(
+        val tagName: String,
         val recipeId: Long
 )

@@ -33,12 +33,11 @@ internal class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) ->
     internal class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.recipeTitle
         val imageView: ImageView = itemView.recipeImage
-        val dragHandle: ImageView = itemView.dragHandle
 
         private val dragListener = DragTouchListener()
 
         fun bind(recipe: Recipe, listener: (Recipe) -> Unit) = with(itemView) {
-            dragListener.recipeId = recipe.id
+            dragListener.recipeId = recipe.id!!
             dragHandle.setOnTouchListener(dragListener)
 
             title.text = recipe.title

@@ -5,6 +5,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import com.maragues.planner.persistence.entities.MealSlotRecipe;
 import com.maragues.planner.persistence.entities.Recipe;
+import com.maragues.planner.persistence.entities.RecipeTag;
 import com.maragues.planner.persistence.entities.Tag;
 
 /**
@@ -14,7 +15,8 @@ import com.maragues.planner.persistence.entities.Tag;
     entities = {
         Recipe.class,
         MealSlotRecipe.class,
-        Tag.class
+        Tag.class,
+        RecipeTag.class
     },
     version = 1)
 @TypeConverters(RoomTypeConverters.class)
@@ -25,5 +27,7 @@ public abstract class RoomAppDatabase extends RoomDatabase {
   abstract MealSlotDao mealSlotDao();
 
   abstract TagDao tagDao();
+
+  abstract RecipeTagDao recipeTagDao();
 
 }

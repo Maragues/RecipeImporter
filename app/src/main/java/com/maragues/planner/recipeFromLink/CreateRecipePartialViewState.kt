@@ -1,5 +1,7 @@
 package com.maragues.planner.recipeFromLink
 
+import com.maragues.planner.persistence.entities.Tag
+
 /**
  * Created by miguelaragues on 24/2/18.
  */
@@ -52,5 +54,11 @@ internal data class UserTypedUrl(val url: String) : CreateRecipePartialViewState
 internal class ShowAddTagDialogAction : CreateRecipePartialViewState() {
     override fun computeViewState(previousState: CreateRecipeViewState): CreateRecipeViewState {
         return previousState.withAction(ACTION_SHOW_ADD_TAG_DIALOG)
+    }
+}
+
+internal class RecipeTagsPartialState(val tags: Set<Tag>) : CreateRecipePartialViewState() {
+    override fun computeViewState(previousState: CreateRecipeViewState): CreateRecipeViewState {
+        return previousState.withTags(tags)
     }
 }
