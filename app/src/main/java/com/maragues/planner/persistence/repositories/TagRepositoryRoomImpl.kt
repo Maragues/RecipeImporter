@@ -10,11 +10,19 @@ import javax.inject.Inject
  */
 internal class TagRepositoryRoomImpl
 @Inject constructor(val tagDao: TagDao) : TagRepository {
+    override fun insert(tags: List<Tag>) {
+        tagDao.insert(tags)
+    }
+
+    override fun insert(tag: Tag) {
+        tagDao.insert(tag)
+    }
+
     override fun listFilteredBy(filter: String): Flowable<List<Tag>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return tagDao.listFilteredBy(filter)
     }
 
     override fun list(): Flowable<List<Tag>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return tagDao.list()
     }
 }

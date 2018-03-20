@@ -34,4 +34,9 @@ public class RoomModule {
   static TagDao providesTagDao(RoomAppDatabase appDatabase) {
     return appDatabase.tagDao();
   }
+
+  @Provides
+  static RecipeTagDao providesRecipeTagDao(RoomAppDatabase appDatabase) {
+    return appDatabase.recipeTagDao();
+  }
 }

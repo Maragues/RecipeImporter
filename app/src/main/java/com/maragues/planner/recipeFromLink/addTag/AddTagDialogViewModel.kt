@@ -8,7 +8,9 @@ import com.maragues.planner.persistence.entities.Tag
 import com.maragues.planner.persistence.repositories.TagRepository
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -16,16 +18,14 @@ import javax.inject.Inject
  */
 internal class AddTagDialogViewModel(val tagRepository: TagRepository) : BaseViewModel() {
 
-    val selectedTagSubject: PublishSubject<Tag> = PublishSubject.create();
-
     fun viewStateObservable(filterObservable: Observable<String>): Observable<AddTagViewState> {
         return filterObservable
+                .startWith("")
                 .flatMap { filter ->
                     tagRepository.listFilteredBy(filter)
                             .toObservable()
                             .map { AddTagViewState(it, !filter.isEmpty()) }
                 }
-                .startWith(AddTagViewState(listOf(), true))
     }
 
     class Factory
@@ -34,18 +34,6 @@ internal class AddTagDialogViewModel(val tagRepository: TagRepository) : BaseVie
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return AddTagDialogViewModel(tagRepository) as T
         }
-    }
-
-    fun selectedTagObservable(): Observable<Tag> {
-        return selectedTagSubject.hide()
-    }
-
-    fun onCreateTagClicked(text: Editable) {
-        onTagSelected(Tag(text.toString()))
-    }
-
-    fun onTagSelected(tag: Tag) {
-        selectedTagSubject.onNext(tag)
     }
 }
 

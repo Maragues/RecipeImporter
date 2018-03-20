@@ -17,4 +17,7 @@ abstract class RepositoriesModule {
 
     @Binds
     internal abstract fun bindsTagRepository(tagRepositoryRoom: TagRepositoryRoomImpl): TagRepository
+
+    @Binds
+    internal abstract fun bindsRecipeTagRepository(recipeTagRepositoryRoom: RecipeTagRepositoryRoomImpl): RecipeTagRepository
 }

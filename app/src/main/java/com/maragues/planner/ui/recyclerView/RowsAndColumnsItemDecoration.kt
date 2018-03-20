@@ -13,8 +13,8 @@ class RowsAndColumnsItemDecoration(val rowSpace: Int, val columnSpace: Int, val 
     override fun getItemOffsets(outRect: Rect, view: View?, parent: RecyclerView, state: State?) {
         super.getItemOffsets(outRect, view, parent, state)
 
-        val totalRows = parent.adapter.itemCount / spanCount
-        val layoutPosition = parent.getChildLayoutPosition(view)
+        val totalRows = parent.adapter!!.itemCount / spanCount
+        val layoutPosition = parent.getChildLayoutPosition(view!!)
         val viewRow = layoutPosition / spanCount
         //if it's not last row, add bottom space
         if (viewRow != totalRows) {

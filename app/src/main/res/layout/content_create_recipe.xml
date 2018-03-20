@@ -8,7 +8,10 @@
   android:layout_height="match_parent"
   android:paddingTop="@dimen/activity_vertical_margin"
   android:paddingStart="@dimen/activity_horizontal_margin"
-  android:paddingEnd="@dimen/activity_horizontal_margin">
+  android:paddingEnd="@dimen/activity_horizontal_margin"
+  app:layout_behavior="@string/appbar_scrolling_view_behavior"
+  tools:context="com.maragues.planner.recipeFromLink.NewRecipeActivity"
+  tools:showIn="@layout/activity_create_recipe">
 
   <EditText
     android:id="@+id/newRecipeTitle"
@@ -47,27 +50,36 @@
     app:layout_constraintTop_toBottomOf="@id/newRecipeImage"
     tools:text="Cocido Madrileño es lo mejor"/>
 
-  <TextView
-    android:id="@+id/newRecipeAddTag"
-    android:layout_width="0dp"
-    android:layout_height="@dimen/min_touch_zone"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:background="@drawable/shape_chip_bakground"
-    android:drawableStart="@drawable/ic_add"
-    android:gravity="center"
-    android:text="@string/tag"
-    android:textColor="@android:color/white"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/newRecipeDescription"/>
-
   <android.support.v7.widget.RecyclerView
     android:id="@+id/newRecipeTagRecyclerView"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    app:layout_constraintBottom_toBottomOf="@id/newRecipeAddTag"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toEndOf="@id/newRecipeAddTag"
+    app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/newRecipeDescription"/>
+
+  <!--<android.support.design.chip.ChipGroup
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:flexWrap="wrap"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/newRecipeDescription">
+
+    <android.support.design.chip.Chip
+      android:id="@+id/newRecipeAddTag"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_minHeight="@dimen/min_touch_zone"
+      app:layout_minWidth="@dimen/min_touch_zone"
+      android:gravity="center"
+      android:textColor="@android:color/white"
+      app:chipBackgroundColor="@color/colorPrimary"
+      app:chipIcon="@drawable/ic_add"
+      app:chipIconEnabled="true"
+      app:chipText="@string/tag"/>
+
+  </android.support.design.chip.ChipGroup>-->
 </android.support.constraint.ConstraintLayout>

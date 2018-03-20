@@ -9,4 +9,6 @@ import io.reactivex.Flowable
 interface TagRepository {
     fun list(): Flowable<List<Tag>>
     fun listFilteredBy(filter: String): Flowable<List<Tag>>
+    fun insert(tag: Tag)
+    fun insert(tags: List<Tag>)
 }

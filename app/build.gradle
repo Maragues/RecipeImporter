@@ -7,11 +7,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 'android-P'
     defaultConfig {
         applicationId "com.maragues.planner_kotlin"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 'P'
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -48,6 +48,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:design-chip:${rootProject.ext.supportLibVersion}"
+    implementation 'com.google.android:flexbox:0.3.2'
 
     //Architecture components
     implementation "android.arch.lifecycle:runtime:${rootProject.ext.lifecycleRuntime}"
@@ -67,6 +69,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:" + rootProject.ext.rxJavaVersion
     implementation 'io.reactivex.rxjava2:rxandroid:' + rootProject.ext.rxAndroidVersion
     implementation 'com.jakewharton.rx2:replaying-share:' + rootProject.ext.replayShareVersion
+    implementation 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
 

@@ -11,14 +11,13 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_LONG
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.OrientationHelper.HORIZONTAL
 import android.view.Menu
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.common.loadUrl
+import com.maragues.planner.common.setTextIfEmpty
 import com.maragues.planner.recipeFromLink.RecipeFromLinkNavigator.Companion.NAVIGATE_TO_RECIPE_LIST_AND_FINISH
 import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
 import com.maragues.planner.recipes.RecipesListActivity
@@ -29,12 +28,12 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeAddTag
-import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeDescription
-import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeImage
-import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeRoot
-import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeTagRecyclerView
-import kotlinx.android.synthetic.main.activity_new_recipe_from_link.newRecipeTitle
+import kotlinx.android.synthetic.main.activity_create_recipe.createRecipeFab
+import kotlinx.android.synthetic.main.content_create_recipe.newRecipeDescription
+import kotlinx.android.synthetic.main.content_create_recipe.newRecipeImage
+import kotlinx.android.synthetic.main.content_create_recipe.newRecipeRoot
+import kotlinx.android.synthetic.main.content_create_recipe.newRecipeTagRecyclerView
+import kotlinx.android.synthetic.main.content_create_recipe.newRecipeTitle
 import javax.inject.Inject
 
 /**
@@ -71,7 +70,7 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_recipe_from_link)
+        setContentView(R.layout.activity_create_recipe)
 
         subscribeToViewModel()
 
@@ -84,13 +83,29 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
         setupLinkClick()
 
         setupTags()
+
+        createRecipeFab.setOnClickListener { viewModel.onSaveClicked(createRecipeFromFields()) }
     }
 
+    private fun createRecipeFromFields() = UserRecipeFields(title(), description())
+
+    private fun description() = newRecipeDescription.text.toString()
+
+    private fun title() = newRecipeTitle.text.toString()
+
     private fun setupTags() {
-        newRecipeTagRecyclerView.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
+        newRecipeTagRecyclerView.layoutManager = FlexboxLayoutManager(this)
         newRecipeTagRecyclerView.adapter = tagAdapter
 
-        newRecipeAddTag.setOnClickListener({ viewModel.onAddTagClicked() })
+        disposables().add(tagAdapter.addTagObservable().subscribe(
+                { viewModel.onAddTagClicked() },
+                Throwable::printStackTrace
+        ))
+
+        disposables().add(tagAdapter.removeTagObservable().subscribe(
+                { viewModel.onRemoveTagClicked(it) },
+                Throwable::printStackTrace
+        ))
     }
 
     private fun setupLinkClick() {
@@ -144,17 +159,6 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.new_recipe_from_link_save -> {
-                viewModel.onSaveClicked()
-                return true
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun render(viewState: CreateRecipeViewState) {
         renderScrapInProgress(viewState)
 
@@ -163,6 +167,12 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
         renderScrapedRecipe(viewState)
 
         renderAction(viewState)
+
+        renderTags(viewState)
+    }
+
+    private fun renderTags(viewState: CreateRecipeViewState) {
+        tagAdapter.updateList(viewState.tags)
     }
 
     private fun renderAction(viewState: CreateRecipeViewState) {
@@ -196,10 +206,12 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun renderScrapedRecipe(viewState: CreateRecipeViewState) {
         val scrapedRecipe = viewState.scrapedRecipe
-        newRecipeTitle.setText(scrapedRecipe.title)
+
+        newRecipeTitle.setTextIfEmpty(scrapedRecipe.title)
+        newRecipeDescription.setTextIfEmpty(scrapedRecipe.description)
+
         val urlToLoad = if (scrapedRecipe.image.isEmpty()) null else scrapedRecipe.image
         newRecipeImage.loadUrl(urlToLoad)
-        newRecipeDescription.setText(scrapedRecipe.description)
 
         if (!scrapedRecipe.link.isEmpty())
             tintLinkCompoundDrawable()
@@ -253,5 +265,7 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
         return fragmentInjector
     }
+
+    internal data class UserRecipeFields(val title: String, val description: String)
 }
 

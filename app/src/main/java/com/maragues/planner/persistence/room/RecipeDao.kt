@@ -20,5 +20,5 @@ abstract class RecipeDao {
     abstract fun recipesByIds(ids: String): List<Recipe>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insert(recipe: Recipe)
+    abstract fun insert(recipe: Recipe) : Long
 }
