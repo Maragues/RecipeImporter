@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +14,6 @@ import android.widget.EditText
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.maragues.planner.common.BaseDaggerDialogFragment
 import com.maragues.planner.persistence.entities.Tag
-import com.maragues.planner.recipeFromLink.NewRecipeViewModel
 import com.maragues.planner_kotlin.R
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,6 +26,10 @@ import javax.inject.Inject
  */
 internal class AddTagDialogFragment : BaseDaggerDialogFragment() {
 
+    internal interface TagSelectedListener {
+        fun onTagSelected(tag: Tag)
+    }
+
     companion object {
         val TAG = AddTagDialogFragment::class.java.simpleName
 
@@ -37,28 +39,25 @@ internal class AddTagDialogFragment : BaseDaggerDialogFragment() {
     }
 
     @Inject
-    internal lateinit var activityViewModelFactory: NewRecipeViewModel.Factory
+    internal lateinit var tagSelectedListener: TagSelectedListener
 
     @Inject
     internal lateinit var viewModelFactory: AddTagDialogViewModel.Factory
 
     private lateinit var viewModel: AddTagDialogViewModel
 
-    private lateinit var activityViewModel: NewRecipeViewModel
-
     private lateinit var filterEditText: EditText
     private lateinit var createButton: Button
     private lateinit var emptyLayout: View
 
     private val tagAdapter = TagAdapter {
-        activityViewModel.onTagSelected(it)
+        tagSelectedListener.onTagSelected(it)
 
         dismiss()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddTagDialogViewModel::class.java)
-        activityViewModel = ViewModelProviders.of(activity!!, activityViewModelFactory).get(NewRecipeViewModel::class.java)
 
         return AlertDialog.Builder(context!!)
                 .setTitle(R.string.add_tag_dialog_title)
@@ -79,7 +78,7 @@ internal class AddTagDialogFragment : BaseDaggerDialogFragment() {
         recyclerView.adapter = tagAdapter
 
         createButton.setOnClickListener {
-            activityViewModel.onTagSelected(Tag(filterEditText.text.toString()))
+            tagSelectedListener.onTagSelected(Tag(filterEditText.text.toString()))
 
             dismiss()
         }

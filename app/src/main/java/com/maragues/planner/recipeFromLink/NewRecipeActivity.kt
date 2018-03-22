@@ -145,7 +145,7 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun subscribeToViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewRecipeViewModel::class.java)
-        disposables().add(viewModel.viewStateObservable()
+        disposables().add(viewModel.viewStateObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::render,
