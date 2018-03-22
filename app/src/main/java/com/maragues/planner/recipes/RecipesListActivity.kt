@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.chip.Chip
+import android.support.design.chip.ChipGroup
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.DragEvent
 import android.view.View
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.recipeFromLink.NewRecipeActivity
+import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
 import com.maragues.planner_kotlin.R
 import dagger.android.AndroidInjector
@@ -20,6 +23,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipesListFab
 import kotlinx.android.synthetic.main.activity_recipes_list.toolbar
 import kotlinx.android.synthetic.main.content_recipes_list.recipeList
+import kotlinx.android.synthetic.main.content_recipes_list.recipeListFilterTag
+import kotlinx.android.synthetic.main.content_recipes_list.recipeListFilterTagGroup
 import javax.inject.Inject
 
 class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
@@ -38,7 +43,7 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     @Inject
-    lateinit var viewModelFactory: RecipesListViewModel.Factory
+    internal lateinit var viewModelFactory: RecipesListViewModel.Factory
 
     private lateinit var viewModel: RecipesListViewModel
 
@@ -54,6 +59,14 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
         initRecipesList()
 
         subscribeToViewModel()
+
+        initTagFilter()
+    }
+
+    private fun initTagFilter() {
+        recipeListFilterTag.setOnClickListener {
+            viewModel.onTagFilterClicked()
+        }
     }
 
     private fun initFAB() {
@@ -95,10 +108,47 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun initRecipesList() {
         recipeList.layoutManager = GridLayoutManager(this, 2)
-        recipeList.addItemDecoration(SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.recipe_list_grid_spacing)));
+        recipeList.addItemDecoration(SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.recipe_list_grid_spacing)))
     }
 
     private fun render(viewState: RecipesListViewState) {
+        renderRecipes(viewState)
+
+        renderTagFilter(viewState)
+
+        renderAction(viewState)
+    }
+
+    private fun renderAction(viewState: RecipesListViewState) {
+        when (viewState.actionId) {
+            ACTION_SHOW_FILTER_TAG_DIALOG -> showAddTagDialog()
+            ACTION_NONE -> { //do nothing
+            }
+        }
+    }
+
+    private fun showAddTagDialog() {
+        if (supportFragmentManager.findFragmentByTag(AddTagDialogFragment.TAG) == null) {
+            val addTagDialog = AddTagDialogFragment.newInstance()
+
+            addTagDialog.show(supportFragmentManager, AddTagDialogFragment.TAG)
+        }
+    }
+
+    private fun renderTagFilter(viewState: RecipesListViewState) {
+        recipeListFilterTagGroup.removeAllViews()
+        viewState.tagFilters.forEach({ tag ->
+            val chip = Chip(this)
+
+            chip.isCloseIconEnabled = true
+            chip.chipText = tag.name
+            chip.setOnCloseIconClickListener { viewModel.onTagRemoved(tag) }
+
+            recipeListFilterTagGroup.addView(chip)
+        })
+    }
+
+    private fun renderRecipes(viewState: RecipesListViewState) {
         recipeList.adapter = RecipesAdapter(viewState.recipes) {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.url)))
         }

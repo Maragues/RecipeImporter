@@ -5,6 +5,7 @@ import com.maragues.planner.di.DaggerAppComponent
 import dagger.android.HasActivityInjector
 import android.app.Activity
 import com.facebook.stetho.Stetho
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import timber.log.Timber
@@ -21,6 +22,8 @@ class App : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this);
 
         Stetho.initializeWithDefaults(this)
 

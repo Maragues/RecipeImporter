@@ -5,10 +5,14 @@ import android.arch.lifecycle.ViewModelProvider
 import com.jakewharton.rx.ReplayingShare
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.interactors.RecipeInteractor
+import com.maragues.planner.persistence.entities.AddTag
 import com.maragues.planner.persistence.entities.Recipe
+import com.maragues.planner.persistence.entities.RemoveTag
 import com.maragues.planner.persistence.entities.Tag
+import com.maragues.planner.persistence.entities.TagAction
 import com.maragues.planner.persistence.repositories.RecipeTagRepository
 import com.maragues.planner.recipeFromLink.NewRecipeActivity.UserRecipeFields
+import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment.TagSelectedListener
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
@@ -23,13 +27,13 @@ internal class NewRecipeViewModel(
         private val recipeLinkScrapper: RecipeLinkScrapper,
         private val recipeInteractor: RecipeInteractor,
         private val recipeTagRepository: RecipeTagRepository,
-        private val navigator: RecipeFromLinkNavigator) : BaseViewModel() {
+        private val navigator: RecipeFromLinkNavigator) : BaseViewModel(), TagSelectedListener {
 
     private val actionIdSubject = BehaviorSubject.create<Int>()
     private val userTypedUrlSubject = PublishSubject.create<String>()
     private val tagSubject = ReplaySubject.create<TagAction>()
 
-    private var viewStateObservable: Observable<CreateRecipeViewState>? = null
+    val viewStateObservable by lazy { initViewStateObservable() }
 
     private fun scrappedRecipeObservable(): Observable<CreateRecipePartialViewState> {
         if (urlToScrap == null)
@@ -70,23 +74,19 @@ internal class NewRecipeViewModel(
                 .map { RecipeTagsPartialState(it) }
     }
 
-    internal fun viewStateObservable(): Observable<CreateRecipeViewState> {
-        if (viewStateObservable == null) {
-            val partialStateObservable = Observable.merge(
-                    scrappedRecipeObservable(),
-                    userTypedUrlObservable(),
-                    actionIdObservable(),
-                    tagsObservable()
-            )
+    private fun initViewStateObservable(): Observable<CreateRecipeViewState> {
+        val partialStateObservable = Observable.merge(
+                scrappedRecipeObservable(),
+                userTypedUrlObservable(),
+                actionIdObservable(),
+                tagsObservable()
+        )
 
-            val initialState = CreateRecipeViewState.EMPTY
+        val initialState = CreateRecipeViewState.EMPTY
 
-            viewStateObservable = partialStateObservable
-                    .scan(initialState, { state, partialState -> partialState.computeViewState(state) })
-                    .compose(ReplayingShare.instance())
-        }
-
-        return viewStateObservable!!
+        return partialStateObservable
+                .scan(initialState, { state, partialState -> partialState.computeViewState(state) })
+                .compose(ReplayingShare.instance())
     }
 
     fun onSaveClicked(userRecipeFields: UserRecipeFields) {
@@ -145,29 +145,11 @@ internal class NewRecipeViewModel(
         actionIdSubject.onNext(ACTION_SHOW_ADD_TAG_DIALOG)
     }
 
-    fun onTagSelected(tag: Tag) {
+    override fun onTagSelected(tag: Tag) {
         tagSubject.onNext(AddTag(tag))
     }
 
     fun onRemoveTagClicked(tag: Tag) {
         tagSubject.onNext(RemoveTag(tag))
     }
-}
-
-private sealed class TagAction {
-    abstract fun apply(oldTags: Set<Tag>): Set<Tag>
-}
-
-private data class AddTag(val tag: Tag) : TagAction() {
-    override fun apply(oldTags: Set<Tag>): Set<Tag> {
-        val tagSet = mutableSetOf(tag)
-
-        tagSet.addAll(oldTags)
-
-        return tagSet
-    }
-}
-
-private data class RemoveTag(val tag: Tag) : TagAction() {
-    override fun apply(oldTags: Set<Tag>) = oldTags.minus(tag)
 }
