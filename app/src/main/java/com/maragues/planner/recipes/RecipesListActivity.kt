@@ -1,17 +1,22 @@
 package com.maragues.planner.recipes
 
+import android.app.SearchManager
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.chip.Chip
-import android.support.design.chip.ChipGroup
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.DragEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
 import com.maragues.planner.common.BaseActivity
+import com.maragues.planner.common.setVisible
 import com.maragues.planner.recipeFromLink.NewRecipeActivity
 import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
@@ -23,9 +28,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipesListFab
 import kotlinx.android.synthetic.main.activity_recipes_list.toolbar
 import kotlinx.android.synthetic.main.content_recipes_list.recipeList
-import kotlinx.android.synthetic.main.content_recipes_list.recipeListFilterTag
 import kotlinx.android.synthetic.main.content_recipes_list.recipeListFilterTagGroup
+import kotlinx.android.synthetic.main.content_recipes_list.recipeListTagsFiltered
 import javax.inject.Inject
+import android.support.v4.view.MenuItemCompat
+import android.util.Log
+import android.view.MenuItem.OnActionExpandListener
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+
 
 class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
 
@@ -59,14 +70,77 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
         initRecipesList()
 
         subscribeToViewModel()
-
-        initTagFilter()
     }
 
-    private fun initTagFilter() {
-        recipeListFilterTag.setOnClickListener {
-            viewModel.onTagFilterClicked()
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.recipes_list_menu, menu)
+
+        initSearchView(menu.findItem(R.id.search_recipes))
+
+        return true
+    }
+
+    private fun initSearchView(searchViewItem: MenuItem) {
+        with(searchViewItem.actionView as SearchView) {
+            setOnQueryTextListener(object : OnQueryTextListener {
+                override fun onQueryTextSubmit(queryText: String): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(queryText: String): Boolean {
+                    viewModel.onSearchRecipe(queryText)
+
+                    return true
+                }
+            })
+
+            setOnCloseListener {
+                viewModel.onSearchRecipe("")
+
+                false
+            }
+
+            setOnQueryTextFocusChangeListener { view, hasFocus ->
+                run {
+                    if (hasFocus) {
+                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                        imm?.showSoftInput(view.findFocus(), SHOW_IMPLICIT)
+                    }
+                }
+            }
+
+            queryHint = getString(R.string.search_hint)
         }
+
+        searchViewItem.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(menuItem: MenuItem): Boolean {
+                (menuItem.actionView as SearchView).isIconified = false
+
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(menuItem: MenuItem): Boolean {
+                (menuItem.actionView as SearchView).isIconified = true
+                (menuItem.actionView as SearchView).setQuery("", false)
+                viewModel.onSearchRecipe("")
+
+                return true
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.filter_recipes -> {
+                viewModel.onTagFilterClicked()
+
+                true
+            }
+//            android.R.id.home -> viewModel.onSearchRecipe("")
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initFAB() {
@@ -136,6 +210,8 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private fun renderTagFilter(viewState: RecipesListViewState) {
+        recipeListTagsFiltered.setVisible(!viewState.tagFilters.isEmpty())
+
         recipeListFilterTagGroup.removeAllViews()
         viewState.tagFilters.forEach({ tag ->
             val chip = Chip(this)

@@ -90,7 +90,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:" + rootProject.ext.daggerVersion
     kapt 'com.google.dagger:dagger-android-processor:' + rootProject.ext.daggerVersion
 
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta6'
 
     implementation 'org.jsoup:jsoup:1.10.1'
 
@@ -103,3 +103,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
+configurations.all {
+    resolutionStrategy {
+        force "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
+    }}

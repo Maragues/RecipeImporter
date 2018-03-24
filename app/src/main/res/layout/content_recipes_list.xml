@@ -9,43 +9,36 @@
   tools:context="com.maragues.planner.recipes.RecipesListActivity"
   tools:showIn="@layout/activity_recipes_list">
 
-  <ImageButton
-    android:id="@+id/recipeListFilterSearch"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/ic_search"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
-
-  <ImageButton
-    android:id="@+id/recipeListFilterTag"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/ic_filter"
-    app:layout_constraintLeft_toRightOf="@id/recipeListFilterSearch"
-    app:layout_constraintTop_toTopOf="parent"/>
-
   <HorizontalScrollView
     android:id="@+id/recipeListTagsFiltered"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    app:layout_constraintLeft_toRightOf="@id/recipeListFilterTag"
+    android:visibility="gone"
+    app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    tools:visibility="visible">
     <android.support.design.chip.ChipGroup
       android:id="@+id/recipeListFilterTagGroup"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      app:singleSelection="false"
-      app:singleLine="true">
+      app:singleLine="true"
+      app:singleSelection="false">
       <android.support.design.chip.Chip
-        app:chipText="pepepe"
-        app:closeIconEnabled="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:chipText="pepepe"
+        app:closeIconEnabled="true"/>
     </android.support.design.chip.ChipGroup>
   </HorizontalScrollView>
+
+  <android.support.constraint.Barrier
+    android:id="@+id/barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="bottom"
+    app:constraint_referenced_ids="recipeListTagsFiltered"/>
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/recipeList"
@@ -54,7 +47,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/recipeListFilterTag"/>
+    app:layout_constraintTop_toBottomOf="@id/barrier"/>
 
   <fragment
     android:id="@+id/plannerFragment"

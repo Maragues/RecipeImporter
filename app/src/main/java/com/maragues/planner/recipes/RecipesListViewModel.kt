@@ -11,10 +11,13 @@ import com.maragues.planner.persistence.entities.Tag
 import com.maragues.planner.persistence.entities.TagAction
 import com.maragues.planner.persistence.repositories.RecipeRepository
 import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment.TagSelectedListener
+import io.reactivex.BackpressureStrategy.BUFFER
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import java.util.Collections
 import javax.inject.Inject
@@ -24,14 +27,10 @@ import javax.inject.Inject
  */
 internal class RecipesListViewModel(val recipesRepository: RecipeRepository) : BaseViewModel(), TagSelectedListener {
 
-
-    private val recipeListViewStateSubject: BehaviorSubject<RecipesListViewState> = BehaviorSubject.create()
-
-    private var viewState: RecipesListViewState = initialViewState()
-
     private val actionIdSubject = BehaviorSubject.create<Int>()
     private val recipesSubject = BehaviorSubject.create<List<Recipe>>()
     private val tagSubject = ReplaySubject.create<TagAction>()
+    val searchSubject = PublishSubject.create<String>()
 
     private val viewStateObservable: Observable<RecipesListViewState> by lazy { initViewStateObservable() }
 
@@ -47,9 +46,9 @@ internal class RecipesListViewModel(val recipesRepository: RecipeRepository) : B
                 .map { TagFiltersPartialState(it) }
     }
 
-    private fun recipesObservable(): Observable<RecipesPartialState>? {
-        return recipesSubject
-                .doOnSubscribe({ loadRecipes() })
+    private fun recipesObservable(): Observable<RecipesPartialState> {
+        return Flowable.merge(filterByTagObservable(), searchRecipeObservable())
+                .toObservable()
                 .startWith(listOf<Recipe>())
                 .map { RecipesPartialState(it) }
     }
@@ -86,13 +85,12 @@ internal class RecipesListViewModel(val recipesRepository: RecipeRepository) : B
             ACTION_NONE
     )
 
-    private fun loadRecipes() {
-        disposables().add(recipesRepository.filterByTag(tagsObservable().map { it.tags })
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                        recipesSubject::onNext,
-                        Throwable::printStackTrace
-                ))
+    private fun filterByTagObservable() = recipesRepository.filterByTag(tagsObservable().map { it.tags })
+
+    private fun searchRecipeObservable(): Flowable<List<Recipe>> {
+        return searchSubject
+                .toFlowable(BUFFER)
+                .switchMap { recipesRepository.filterByName(it) }
     }
 
     override fun onTagSelected(tag: Tag) {
@@ -105,6 +103,10 @@ internal class RecipesListViewModel(val recipesRepository: RecipeRepository) : B
 
     fun onTagFilterClicked() {
         actionIdSubject.onNext(ACTION_SHOW_FILTER_TAG_DIALOG)
+    }
+
+    fun onSearchRecipe(queryText: String) {
+        searchSubject.onNext(queryText)
     }
 
     class Factory

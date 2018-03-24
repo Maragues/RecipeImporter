@@ -23,7 +23,7 @@ internal abstract class TagDao {
     @Query("SELECT * FROM tag")
     abstract fun list(): Flowable<List<Tag>>
 
-    @Query("SELECT * FROM tag where INSTR(name, :filter) > 0 OR LENGTH(:filter) = 0")
+    @Query("SELECT * FROM tag where INSTR(LOWER(name), LOWER(:filter)) > 0 OR LENGTH(:filter) = 0")
     abstract fun listFilteredBy(filter: String): Flowable<List<Tag>>
 
     @Query("SELECT * from tag INNER JOIN recipeTag ON tagName=name AND recipeId=:recipeId")

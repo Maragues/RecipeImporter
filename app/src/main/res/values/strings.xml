@@ -12,4 +12,7 @@
   <string name="add_tag_hint">Type to filter or create</string>
   <string name="add_tag_create">Create</string>
   <string name="add_tag_empty">Create your first tag! Type above and press create</string>
+  <string name="search_title">Search</string>
+  <string name="filter_by_tag">Filter by tag</string>
+  <string name="search_hint">Type recipe name</string>
 </resources>

@@ -33,7 +33,7 @@ ext {
     roomVersion = "1.0.0"
     lifecycleRuntime = "1.1.0"
 
-    rxJavaVersion = "2.1.11"
+    rxJavaVersion = "2.1.12"
     rxAndroidVersion = "2.0.1"
     replayShareVersion = "2.0.1"
 

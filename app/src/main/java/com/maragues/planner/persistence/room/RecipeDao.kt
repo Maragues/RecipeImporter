@@ -16,8 +16,11 @@ abstract class RecipeDao {
     @Query("SELECT * FROM recipe")
     abstract fun readAll(): Flowable<List<Recipe>>
 
-    @Query("SELECT * FROM recipe INNER JOIN recipeTag ON recipeId=id WHERE tagName IN (:tagNamesCommaSeparated) OR LENGTH(:tagNamesCommaSeparated) = 0")
+    @Query("SELECT * FROM recipe WHERE id IN (SELECT recipeId FROM recipeTag WHERE tagName IN (:tagNamesCommaSeparated)) OR LENGTH(:tagNamesCommaSeparated) = 0")
     abstract fun filterByTag(tagNamesCommaSeparated: String): Flowable<List<Recipe>>
+
+    @Query("SELECT * FROM recipe WHERE INSTR(LOWER(title), LOWER(:filter)) > 0 OR LENGTH(:filter) = 0")
+    abstract fun filterByName(filter: String): Flowable<List<Recipe>>
 
     @Query("SELECT * FROM recipe WHERE id IN (:ids)")
     abstract fun recipesByIds(ids: String): List<Recipe>

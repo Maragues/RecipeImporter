@@ -28,3 +28,9 @@ fun TextView.setTextIfEmpty(newText: String) {
     if (text.isEmpty())
         text = newText
 }
+
+fun View.setVisible(visible: Boolean) {
+    val visibility = if (visible) View.VISIBLE else View.GONE
+
+    setVisibility(visibility)
+}

@@ -15,4 +15,6 @@ interface RecipeRepository {
     fun list(): Flowable<List<Recipe>>
 
     fun filterByTag(tagFilter: Observable<Set<Tag>>): Flowable<List<Recipe>>
+
+    fun filterByName(query: String): Flowable<List<Recipe>>
 }
