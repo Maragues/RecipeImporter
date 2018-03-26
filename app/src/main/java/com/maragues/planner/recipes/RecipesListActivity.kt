@@ -1,6 +1,5 @@
 package com.maragues.planner.recipes
 
-import android.app.SearchManager
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -9,16 +8,23 @@ import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.OnItemTouchListener
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.common.setVisible
 import com.maragues.planner.recipeFromLink.NewRecipeActivity
 import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
+import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerRecyclerView.Companion.FADE_OUT_DELAY_MILLIS
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
 import com.maragues.planner_kotlin.R
 import dagger.android.AndroidInjector
@@ -27,15 +33,12 @@ import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipesListFab
 import kotlinx.android.synthetic.main.activity_recipes_list.toolbar
+import kotlinx.android.synthetic.main.content_recipes_list.plannerFragment
 import kotlinx.android.synthetic.main.content_recipes_list.recipeList
 import kotlinx.android.synthetic.main.content_recipes_list.recipeListFilterTagGroup
+import kotlinx.android.synthetic.main.content_recipes_list.recipeListRoot
 import kotlinx.android.synthetic.main.content_recipes_list.recipeListTagsFiltered
 import javax.inject.Inject
-import android.support.v4.view.MenuItemCompat
-import android.util.Log
-import android.view.MenuItem.OnActionExpandListener
-import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 
 
 class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
@@ -65,9 +68,11 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
 
         initFAB()
 
-        initDragAndrDropViews()
+        initDragAndDropViews()
 
         initRecipesList()
+
+        swapZIndexOnDragEvents()
 
         subscribeToViewModel()
     }
@@ -167,7 +172,7 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
         })
     }
 
-    private fun initDragAndrDropViews() {
+    private fun initDragAndDropViews() {
     }
 
     private fun subscribeToViewModel() {
@@ -183,6 +188,26 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
     private fun initRecipesList() {
         recipeList.layoutManager = GridLayoutManager(this, 2)
         recipeList.addItemDecoration(SpacesItemDecoration(resources.getDimensionPixelSize(R.dimen.recipe_list_grid_spacing)))
+    }
+
+    private fun swapZIndexOnDragEvents() {
+        recipeListRoot.setOnDragListener { view, dragEvent ->
+            when (dragEvent.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    recipeListRoot.bringChildToFront(plannerFragment.view)
+
+                    true
+                }
+
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    view.postDelayed({
+                        recipeListRoot.bringChildToFront(recipeList)
+                    }, FADE_OUT_DELAY_MILLIS)
+                }
+            }
+
+            false
+        }
     }
 
     private fun render(viewState: RecipesListViewState) {

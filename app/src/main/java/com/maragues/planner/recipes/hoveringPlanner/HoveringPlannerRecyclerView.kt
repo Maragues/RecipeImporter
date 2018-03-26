@@ -22,6 +22,7 @@ class HoveringPlannerRecyclerView
     : RecyclerView(context, attrs, defStyleAttr) {
     companion object {
         const val COLUMNS = 2
+        const val FADE_OUT_DELAY_MILLIS = 2000L
     }
 
     init {
@@ -45,7 +46,7 @@ class HoveringPlannerRecyclerView
 
             ACTION_DRAG_ENDED -> postDelayed({
                 (parent as View).alpha = 0f
-            }, 2000)
+            }, FADE_OUT_DELAY_MILLIS)
         }
 
         return false

@@ -132,6 +132,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> return true
                 DragEvent.ACTION_DRAG_ENTERED -> {
+                    Timber.d("HoveringAdapter ACTION_DRAG_ENTERED")
 
                     // Applies a green tint to the View. Return true the return value is ignored.
 
@@ -146,6 +147,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
                 DragEvent.ACTION_DRAG_LOCATION -> return true
 
                 DragEvent.ACTION_DRAG_EXITED -> {
+                    Timber.d("HoveringAdapter ACTION_DRAG_EXITED")
                     // Re-sets the color tint to blue. Returns true the return value is ignored.
                     v.setBackgroundResource(R.color.weekPlannerAddBG)
 
@@ -162,6 +164,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
 
                     return true
                 }
+                DragEvent.ACTION_DRAG_ENDED -> Timber.d("HoveringAdapter DRAG_EMVDED")
             }
 
             return false

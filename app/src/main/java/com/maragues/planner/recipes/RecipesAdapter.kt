@@ -43,7 +43,7 @@ internal class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) ->
             title.text = recipe.title
             imageView.loadUrl(recipe.screenshot)
 
-            setOnClickListener { listener(recipe) }
+            title.setOnClickListener { listener(recipe) }
         }
 
         inner class DragTouchListener(var recipeId: Long = 0) : OnTouchListener {
@@ -65,7 +65,7 @@ internal class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) ->
                     }
                 }
 
-                return false;
+                return false
             }
 
         }
