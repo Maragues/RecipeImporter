@@ -33,16 +33,6 @@ import kotlinx.android.synthetic.main.item_meal_planner_hover.view.itemMealEmpty
 import kotlinx.android.synthetic.main.item_meal_planner_hover.view.itemMealRecipeContainer
 import timber.log.Timber
 
-/*
-I need to represent a HoveringMealViewState, that contains a list of recipes
-
-I don't think this is a good approach, since I need to somehow react to the user adding a new recipe to a MealSlot (good name!), be it empty or not
-
- Should the adapter expose "intentions" as "recipeAddedToMealSlotObservable"? This way we'd delegate the logic to adding the recipe to a MealSlot and
- we'd be responsible for painting a list of recipes
-
- This'd mean having some kind of LinearLayout with [0-N]Recipes and 1 add. Dropping on recipe recplaces, dropping on Add, inserts
- */
 internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot, List<Recipe>>) : Adapter<MealViewHolder>() {
 
     private val mealSlots = mealSlotsAndRecipes.keys
@@ -149,7 +139,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
                 layoutInflater.inflate(R.layout.item_hovering_recipe, recipeContainer, true)
                 val recipeLayout = recipeContainer.getChildAt(recipeContainer.childCount - 1) as ConstraintLayout
                 recipeLayout.hoveringRecipeTitle.text = it.title
-                recipeLayout.hoveringRecipeImage.loadUrl(it.url)
+                recipeLayout.hoveringRecipeImage.loadUrl(it.screenshot)
                 recipeLayout.layoutParams = layoutParams
 
                 val dragListener = RecipeDragEventListener(it.id!!)

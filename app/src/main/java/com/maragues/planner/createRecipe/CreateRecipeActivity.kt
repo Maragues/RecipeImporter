@@ -50,8 +50,6 @@ class CreateRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
     @Inject
     internal lateinit var navigator: RecipeFromLinkNavigator
 
-    private var progressDialog: ProgressFragmentDialog? = null
-
     private val tagAdapter = RemovableTagAdapter()
 
     companion object {
@@ -234,16 +232,16 @@ class CreateRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun showScrapInProgress() {
         if (findProgressDialogDisplayed() == null) {
-            progressDialog = ProgressFragmentDialog.newInstance()
-            progressDialog?.show(supportFragmentManager, ProgressFragmentDialog.TAG)
+            val progressDialog = ProgressFragmentDialog.newInstance()
+
+            progressDialog.show(supportFragmentManager, ProgressFragmentDialog.TAG)
+
+            //otherwise two quickly consecutive render calls showed 2 progressDialogs
+            supportFragmentManager.executePendingTransactions()
         }
     }
 
-    private fun hideScrapInProgress() {
-        progressDialog?.dismiss()
-
-        progressDialog = null
-    }
+    private fun hideScrapInProgress() = findProgressDialogDisplayed()?.dismiss()
 
     private fun findProgressDialogDisplayed() =
             supportFragmentManager.findFragmentByTag(ProgressFragmentDialog.TAG) as DialogFragment?
