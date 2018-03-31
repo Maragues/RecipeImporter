@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import com.maragues.planner.test.BaseUnitTest
 import com.nhaarman.mockito_kotlin.mock

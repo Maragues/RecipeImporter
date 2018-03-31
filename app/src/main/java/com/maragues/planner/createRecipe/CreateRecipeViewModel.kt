@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
@@ -11,8 +11,8 @@ import com.maragues.planner.persistence.entities.RemoveTag
 import com.maragues.planner.persistence.entities.Tag
 import com.maragues.planner.persistence.entities.TagAction
 import com.maragues.planner.persistence.repositories.RecipeTagRepository
-import com.maragues.planner.recipeFromLink.NewRecipeActivity.UserRecipeFields
-import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment.TagSelectedListener
+import com.maragues.planner.createRecipe.CreateRecipeActivity.UserRecipeFields
+import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment.TagSelectedListener
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
@@ -22,7 +22,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import javax.inject.Inject
 
-internal class NewRecipeViewModel(
+internal class CreateRecipeViewModel(
         private val urlToScrap: String?,
         private val recipeLinkScrapper: RecipeLinkScrapper,
         private val recipeInteractor: RecipeInteractor,
@@ -131,13 +131,14 @@ internal class NewRecipeViewModel(
     class Factory
     @Inject constructor(
             private val urlToScrap: String?,
+
             private val recipeLinkScrapper: RecipeLinkScrapper,
             private val recipeTagRepository: RecipeTagRepository,
             private val recipeInteractor: RecipeInteractor,
             private val navigator: RecipeFromLinkNavigator) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return NewRecipeViewModel(urlToScrap, recipeLinkScrapper, recipeInteractor, recipeTagRepository, navigator) as T
+            return CreateRecipeViewModel(urlToScrap, recipeLinkScrapper, recipeInteractor, recipeTagRepository, navigator) as T
         }
     }
 

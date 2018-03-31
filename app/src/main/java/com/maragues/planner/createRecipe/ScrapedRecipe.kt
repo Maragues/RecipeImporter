@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 /**
  * Created by miguelaragues on 6/1/18.

@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink.addTag
+package com.maragues.planner.createRecipe.addTag
 
 import android.support.design.chip.Chip
 import android.support.v7.util.DiffUtil
@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.maragues.planner.common.inflate
 import com.maragues.planner.persistence.entities.Tag
-import com.maragues.planner.recipeFromLink.addTag.TagAdapter.TagViewHolder
+import com.maragues.planner.createRecipe.addTag.TagAdapter.TagViewHolder
 import com.maragues.planner_kotlin.R
 
 /**

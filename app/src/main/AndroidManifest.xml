@@ -22,7 +22,7 @@
 
     <activity
       android:launchMode="singleTop"
-      android:name="com.maragues.planner.recipeFromLink.NewRecipeActivity">
+      android:name="com.maragues.planner.createRecipe.CreateRecipeActivity">
       <intent-filter>
         <action android:name="android.intent.action.SEND"/>
 
@@ -32,6 +32,7 @@
         <data android:mimeType="text/plain"/>
       </intent-filter>
     </activity>
+    <activity android:name="com.maragues.planner.showRecipe.ShowRecipeActivity"/>
   </application>
 
 </manifest>

@@ -1,24 +1,15 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import com.maragues.planner.interactors.RecipeInteractor
 import com.maragues.planner.test.BaseUnitTest
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.spy
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import org.junit.Assert.*
-import org.junit.Test
 
 /**
  * Created by miguelaragues on 18/2/18.
  */
 class NewRecipeViewModelTest : BaseUnitTest() {
-    private lateinit var viewModel: NewRecipeViewModel
+    private lateinit var viewModel: CreateRecipeViewModel
 
     private val urlToScrapSubject: PublishSubject<String> = PublishSubject.create()
     private val scrapper: RecipeLinkScrapper = mock()

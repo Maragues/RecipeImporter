@@ -10,6 +10,10 @@ import javax.inject.Inject
  */
 internal class TagRepositoryRoomImpl
 @Inject constructor(val tagDao: TagDao) : TagRepository {
+    override fun tagsByRecipeId(recipeId: Long): Flowable<List<Tag>> {
+        return tagDao.listForRecipeId(recipeId)
+    }
+
     override fun insert(tags: List<Tag>) {
         tagDao.insert(tags)
     }

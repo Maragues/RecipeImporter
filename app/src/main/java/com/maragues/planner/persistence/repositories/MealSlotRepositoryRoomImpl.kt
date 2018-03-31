@@ -16,6 +16,10 @@ import javax.inject.Inject
 internal class MealSlotRepositoryRoomImpl
 @Inject constructor(val mealSlotDao: MealSlotDao,
                     val recipeDao: RecipeDao) : MealSlotRepository {
+    override fun replaceRecipe(mealSlotReplaced: MealSlotRecipe, newRecipeId: Long) {
+        mealSlotDao.replaceRecipe(mealSlotReplaced.date, mealSlotReplaced.mealType, newRecipeId)
+    }
+
     override fun insert(mealSlotRecipe: MealSlotRecipe) {
         mealSlotDao.insert(mealSlotRecipe)
     }
@@ -24,17 +28,14 @@ internal class MealSlotRepositoryRoomImpl
                                         endDate: LocalDate): Flowable<Map<MealSlot, List<Recipe>>> {
         return mealSlotDao.mealsAndRecipeIdsBetween(startDate, endDate)
                 .map { mealsAndRecipeIDs ->
-                    Timber.d("Received new mealsAndRecipes")
                     mealsAndRecipeIDs.associateBy(
                             { MealSlot(it.date, it.mealType) },
                             {
                                 val commaSeparatedIds = it.recipeIds.joinToString(",")
 
-                                recipeDao.recipesByIds(commaSeparatedIds)
+                                recipeDao.recipesByIds(it.recipeIds)
                             }
                     )
                 }
-                .doFinally({ Timber.d("Repository Finalized subscription to mealsAndRecipesBetween")})
-                .doOnSubscribe({ Timber.d("Repository subscribed to mealsAndRecipesBetween")})
     }
 }

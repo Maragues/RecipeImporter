@@ -1,16 +1,22 @@
 package com.maragues.planner.recipes.hoveringPlanner
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.DragEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnAttachStateChangeListener
 import android.view.View.OnDragListener
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
-import android.widget.TextView
 import com.maragues.planner.common.inflate
+import com.maragues.planner.common.loadUrl
+import com.maragues.planner.common.setVisible
 import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.recipes.hoveringPlanner.HoveringWeekPlannerAdapter.MealViewHolder
@@ -20,6 +26,8 @@ import com.maragues.planner_kotlin.R.color
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.item_hovering_recipe.view.hoveringRecipeImage
+import kotlinx.android.synthetic.main.item_hovering_recipe.view.hoveringRecipeTitle
 import kotlinx.android.synthetic.main.item_meal_planner_hover.view.itemMealAdd
 import kotlinx.android.synthetic.main.item_meal_planner_hover.view.itemMealEmptyRecipes
 import kotlinx.android.synthetic.main.item_meal_planner_hover.view.itemMealRecipeContainer
@@ -40,6 +48,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
     private val mealSlots = mealSlotsAndRecipes.keys
 
     private val mealSlotRecipesSubject = PublishSubject.create<MealSlotRecipe>()
+    private val replaceRecipeSubject = PublishSubject.create<ReplaceRecipeAction>()
 
     private val disposables = CompositeDisposable()
 
@@ -48,8 +57,18 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
 
         disposables.add(
                 holder.recipeAddedObservable()
+                        .onTerminateDetach()
                         .subscribe(
                                 { mealSlotRecipesSubject.onNext(it) },
+                                Throwable::printStackTrace
+                        )
+        )
+
+        disposables.add(
+                holder.recipeReplacedObservable()
+                        .onTerminateDetach()
+                        .subscribe(
+                                { replaceRecipeSubject.onNext(it) },
                                 Throwable::printStackTrace
                         )
         )
@@ -71,51 +90,78 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
 
     override fun getItemCount(): Int = mealSlotsAndRecipes.size
 
-    internal fun recipeAddedObservable(): Observable<MealSlotRecipe> {
-        return mealSlotRecipesSubject
-                .doOnNext({ Timber.d("Emitting mealSlot $it") })
-                .hide()
-    }
+    internal fun recipeAddedObservable() = mealSlotRecipesSubject.hide()
+
+    internal fun recipeReplacedObservable() = replaceRecipeSubject.hide()
 
     internal class MealViewHolder(itemView: View) : ViewHolder(itemView) {
 
-        private val addDragEventListener = DragEventListener()
+        private val addDragEventListener = PlusZoneDragEventListener()
+        private val recipeReplacedSubject = PublishSubject.create<ReplaceRecipeAction>()
+
+        val viewHolderDisposables = CompositeDisposable()
 
         private lateinit var mealSlot: MealSlot
 
         init {
             itemView.itemMealAdd.setOnDragListener(addDragEventListener)
+
+            itemView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+                override fun onViewDetachedFromWindow(p0: View?) {
+                    viewHolderDisposables.clear()
+                }
+
+                override fun onViewAttachedToWindow(p0: View?) {
+                }
+            })
         }
 
         fun bind(mealSlot: MealSlot, recipes: List<Recipe>) {
             this.mealSlot = mealSlot
 
-            if (!recipes.isEmpty())
-                Timber.d("")
-
             determineEmptyVisibility(recipes)
 
             determineRecipesBackground(mealSlot)
 
-            fillRecipes(recipes)
+            renderRecipes(recipes)
         }
 
         private fun determineEmptyVisibility(recipes: List<Recipe>) {
-            itemView.itemMealEmptyRecipes.visibility = if (recipes.isEmpty()) View.VISIBLE else View.GONE
+            itemView.itemMealEmptyRecipes.setVisible(recipes.isEmpty())
         }
 
         private fun determineRecipesBackground(mealSlot: MealSlot) {
             itemView.itemMealRecipeContainer.setBackgroundResource(if (mealSlot.isLunch()) color.weekPlannerLunchBG else color.weekPlannerDinnerBG)
         }
 
-        private fun fillRecipes(recipes: List<Recipe>) {
+        private fun renderRecipes(recipes: List<Recipe>) {
             val context = itemView.context
             val recipeContainer = itemView.itemMealRecipeContainer as LinearLayout
 
+            val layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, 0)
+            layoutParams.weight = 1f / recipes.size
+
+            val layoutInflater = LayoutInflater.from(context)
+
+            viewHolderDisposables.clear()
+
             recipes.forEach {
-                val textView = TextView(context)
-                textView.text = it.title
-                recipeContainer.addView(textView)
+                layoutInflater.inflate(R.layout.item_hovering_recipe, recipeContainer, true)
+                val recipeLayout = recipeContainer.getChildAt(recipeContainer.childCount - 1) as ConstraintLayout
+                recipeLayout.hoveringRecipeTitle.text = it.title
+                recipeLayout.hoveringRecipeImage.loadUrl(it.url)
+                recipeLayout.layoutParams = layoutParams
+
+                val dragListener = RecipeDragEventListener(it.id!!)
+                recipeLayout.setOnDragListener(dragListener)
+
+                viewHolderDisposables.add(dragListener.recipeReplacedObservable()
+                        .onTerminateDetach()
+                        .subscribe(
+                                { recipeReplacedSubject.onNext(ReplaceRecipeAction(MealSlotRecipe(mealSlot.date, mealSlot.mealType, it.first), it.second)) },
+                                Throwable::printStackTrace
+                        )
+                )
             }
         }
 
@@ -123,9 +169,61 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
             return addDragEventListener.recipeIdDroppedObservable()
                     .map { MealSlotRecipe(mealSlot.date, mealSlot.mealType, it) }
         }
+
+        internal fun recipeReplacedObservable(): Observable<ReplaceRecipeAction> {
+            return recipeReplacedSubject.hide()
+        }
     }
 
-    internal class DragEventListener : OnDragListener {
+    internal data class ReplaceRecipeAction(val mealSlotReplaced: MealSlotRecipe, val newRecipeId: Long)
+
+    internal class RecipeDragEventListener(val recipeId: Long) : OnDragListener {
+        private val recipeReplacedSubject = PublishSubject.create<Pair<Long, Long>>()
+
+        override fun onDrag(v: View, event: DragEvent): Boolean {
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> return true
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    v.hoveringRecipeImage.setForeground(ColorDrawable(Color.RED))
+//                    ImageViewCompat.setImageTintList(v.hoveringRecipeImage, ColorStateList.valueOf(Color.RED))
+
+                    // Invalidate the view to force a redraw in the new tint
+                    v.hoveringRecipeImage.invalidate()
+
+                    return true
+                }
+
+                DragEvent.ACTION_DRAG_LOCATION -> return true
+
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    v.hoveringRecipeImage.setForeground(null)
+//                    ImageViewCompat.setImageTintList(v.hoveringRecipeImage, null)
+
+                    // Invalidate the view to force a redraw in the new tint
+                    v.hoveringRecipeImage.invalidate()
+
+                    return true
+                }
+
+                DragEvent.ACTION_DROP -> {
+                    val newRecipeId = event.clipData.getItemAt(0).text.toString().toLong()
+
+                    recipeReplacedSubject.onNext(Pair(recipeId, newRecipeId))
+
+                    return true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> Timber.d("HoveringAdapter DRAG_EMVDED")
+            }
+
+            return false
+        }
+
+        internal fun recipeReplacedObservable(): Observable<Pair<Long, Long>> {
+            return recipeReplacedSubject
+        }
+    }
+
+    internal class PlusZoneDragEventListener : OnDragListener {
         private val recipeIdDroppedSubject = PublishSubject.create<Long>()
 
         override fun onDrag(v: View, event: DragEvent): Boolean {

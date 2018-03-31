@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import android.support.annotation.VisibleForTesting
 import android.support.design.chip.Chip

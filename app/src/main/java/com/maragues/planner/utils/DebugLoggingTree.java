@@ -1,4 +1,4 @@
-package com.maragues.planner.test.utils;
+package com.maragues.planner.utils;
 
 import android.util.Log;
 import timber.log.Timber;

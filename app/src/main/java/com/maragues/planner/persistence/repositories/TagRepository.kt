@@ -11,4 +11,5 @@ interface TagRepository {
     fun listFilteredBy(filter: String): Flowable<List<Tag>>
     fun insert(tag: Tag)
     fun insert(tags: List<Tag>)
+    fun tagsByRecipeId(recipeId: Long): Flowable<List<Tag>>
 }

@@ -8,6 +8,7 @@ import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.recipes.model.MealSlot
 import com.maragues.planner.persistence.repositories.MealSlotRepository
+import com.maragues.planner.recipes.hoveringPlanner.HoveringWeekPlannerAdapter.ReplaceRecipeAction
 import com.maragues.planner.recipes.model.MealType.DINNER
 import com.maragues.planner.recipes.model.MealType.LUNCH
 import io.reactivex.Observable
@@ -20,7 +21,7 @@ import javax.inject.Inject
 /**
  * Created by miguelaragues on 11/2/18.
  */
-class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotRepository) : BaseViewModel() {
+internal class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotRepository) : BaseViewModel() {
     companion object {
         const val DAYS_DISPLAYED = 4L
     }
@@ -88,6 +89,17 @@ class HoveringPlannerFragmentViewModel(private val mealSlotRepository: MealSlotR
                         .subscribe(
                                 { mealSlotRepository.insert(it) },
                                 Throwable::printStackTrace
+                        )
+        )
+    }
+
+    fun onRecipeReplacedObservable(recipeReplacedObservable: Observable<ReplaceRecipeAction>) {
+        disposables().add(
+                recipeReplacedObservable
+                        .observeOn(Schedulers.io())
+                        .subscribe(
+                                { mealSlotRepository.replaceRecipe(it.mealSlotReplaced, it.newRecipeId) }
+                                , Throwable::printStackTrace
                         )
         )
     }

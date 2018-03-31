@@ -1,13 +1,10 @@
 package com.maragues.planner.test
 
-import com.jakewharton.threetenabp.AndroidThreeTen.init
+import com.maragues.planner.test.rules.ImmediateRxSchedulersOverrideRule
+import com.maragues.planner.utils.DebugLoggingTree
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
-import com.maragues.planner.test.rules.ImmediateRxSchedulersOverrideRule
-import com.maragues.planner.test.utils.DebugLoggingTree
 import timber.log.Timber
 
 

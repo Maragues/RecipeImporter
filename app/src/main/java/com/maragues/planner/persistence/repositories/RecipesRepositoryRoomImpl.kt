@@ -17,6 +17,10 @@ import javax.inject.Inject
  */
 internal class RecipesRepositoryRoomImpl
 @Inject constructor(val recipeDao: RecipeDao) : RecipeRepository {
+    override fun read(recipeId: Long): Single<Recipe> {
+        return recipeDao.read(recipeId)
+    }
+
     override fun filterByName(query: String): Flowable<List<Recipe>> {
         return recipeDao.filterByName(query)
     }

@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
 import com.maragues.planner.persistence.entities.RecipeTag
 import com.maragues.planner.persistence.entities.Tag
+import io.reactivex.Flowable
 
 /**
  * Created by miguelaragues on 10/3/18.

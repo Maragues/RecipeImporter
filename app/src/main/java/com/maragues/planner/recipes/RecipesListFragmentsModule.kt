@@ -1,7 +1,7 @@
 package com.maragues.planner.recipes
 
 import com.maragues.planner.di.FragmentScope
-import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
+import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment
 import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerFragment
 import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerFragmentModule
 import dagger.Module

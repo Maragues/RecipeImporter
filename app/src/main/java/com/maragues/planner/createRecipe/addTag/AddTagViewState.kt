@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink.addTag
+package com.maragues.planner.createRecipe.addTag
 
 import com.maragues.planner.persistence.entities.Tag
 

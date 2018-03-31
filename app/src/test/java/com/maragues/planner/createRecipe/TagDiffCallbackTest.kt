@@ -1,7 +1,7 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import com.maragues.planner.persistence.entities.Tag
-import com.maragues.planner.recipeFromLink.RemovableTagAdapter.TagDiffCallback
+import com.maragues.planner.createRecipe.RemovableTagAdapter.TagDiffCallback
 import com.maragues.planner.test.BaseUnitTest
 import org.junit.Assert.*
 import org.junit.Test

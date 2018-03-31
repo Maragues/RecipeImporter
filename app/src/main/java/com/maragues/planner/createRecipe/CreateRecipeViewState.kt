@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import android.support.annotation.IntDef
 import com.maragues.planner.persistence.entities.Tag

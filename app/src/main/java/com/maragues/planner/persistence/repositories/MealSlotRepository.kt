@@ -14,5 +14,7 @@ interface MealSlotRepository {
                                endDate: LocalDate): Flowable<Map<MealSlot, List<Recipe>>>
 
     fun insert(mealSlotRecipe: MealSlotRecipe)
+
+    fun replaceRecipe(mealSlotReplaced: MealSlotRecipe, newRecipeId: Long)
 }
 

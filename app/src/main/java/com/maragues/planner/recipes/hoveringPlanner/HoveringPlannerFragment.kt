@@ -54,5 +54,6 @@ class HoveringPlannerFragment : BaseFragment() {
         weekMenuDragAndDrop.adapter = hoveringAdapter
 
         viewModel.addRecipeObservable(hoveringAdapter.recipeAddedObservable())
+        viewModel.onRecipeReplacedObservable(hoveringAdapter.recipeReplacedObservable())
     }
 }

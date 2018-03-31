@@ -8,13 +8,10 @@ import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.OnItemTouchListener
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
@@ -22,9 +19,10 @@ import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.common.setVisible
-import com.maragues.planner.recipeFromLink.NewRecipeActivity
-import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
+import com.maragues.planner.createRecipe.CreateRecipeActivity
+import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment
 import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerRecyclerView.Companion.FADE_OUT_DELAY_MILLIS
+import com.maragues.planner.showRecipe.ShowRecipeActivity
 import com.maragues.planner.ui.recyclerView.SpacesItemDecoration
 import com.maragues.planner_kotlin.R
 import dagger.android.AndroidInjector
@@ -168,7 +166,7 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
         })
 
         recipesListFab.setOnClickListener({
-            startActivity(NewRecipeActivity.createIntent(this))
+            startActivity(CreateRecipeActivity.createIntent(this))
         })
     }
 
@@ -251,7 +249,7 @@ class RecipesListActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun renderRecipes(viewState: RecipesListViewState) {
         recipeList.adapter = RecipesAdapter(viewState.recipes) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.url)))
+            startActivity(ShowRecipeActivity.createIntent(this, it))
         }
     }
 }

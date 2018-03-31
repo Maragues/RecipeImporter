@@ -1,7 +1,7 @@
 package com.maragues.planner.recipes
 
 import android.arch.lifecycle.ViewModelProviders
-import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment.TagSelectedListener
+import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment.TagSelectedListener
 import dagger.Module
 import dagger.Provides
 

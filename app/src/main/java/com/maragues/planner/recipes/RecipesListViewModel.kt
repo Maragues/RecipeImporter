@@ -10,7 +10,7 @@ import com.maragues.planner.persistence.entities.RemoveTag
 import com.maragues.planner.persistence.entities.Tag
 import com.maragues.planner.persistence.entities.TagAction
 import com.maragues.planner.persistence.repositories.RecipeRepository
-import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment.TagSelectedListener
+import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment.TagSelectedListener
 import io.reactivex.BackpressureStrategy.BUFFER
 import io.reactivex.Flowable
 import io.reactivex.Observable

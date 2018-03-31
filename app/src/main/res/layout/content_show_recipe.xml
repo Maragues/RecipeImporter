@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/newRecipeRoot"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:paddingTop="@dimen/activity_vertical_margin"
+  android:paddingStart="@dimen/activity_horizontal_margin"
+  android:paddingEnd="@dimen/activity_horizontal_margin"
+  app:layout_behavior="@string/appbar_scrolling_view_behavior"
+  tools:context="com.maragues.planner.showRecipe.ShowRecipeActivity"
+  tools:showIn="@layout/activity_show_recipe">
+
+  <TextView
+    android:id="@+id/showRecipeTitle"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:drawablePadding="5dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Cocido Madrileño"/>
+
+  <ImageView
+    android:id="@+id/showRecipeImage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="recipe image"
+    android:scaleType="fitCenter"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/showRecipeTitle"/>
+
+  <TextView
+    android:id="@+id/showRecipeDescription"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:singleLine="false"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/showRecipeImage"
+    tools:text="Cocido Madrileño es lo mejor"/>
+
+  <android.support.design.chip.ChipGroup
+    android:id="@+id/showRecipeTags"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/showRecipeDescription"/>
+</android.support.constraint.ConstraintLayout>

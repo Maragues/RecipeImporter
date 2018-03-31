@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_LONG
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
@@ -18,8 +19,8 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.common.loadUrl
 import com.maragues.planner.common.setTextIfEmpty
-import com.maragues.planner.recipeFromLink.RecipeFromLinkNavigator.Companion.NAVIGATE_TO_RECIPE_LIST_AND_FINISH
-import com.maragues.planner.recipeFromLink.addTag.AddTagDialogFragment
+import com.maragues.planner.createRecipe.RecipeFromLinkNavigator.Companion.NAVIGATE_TO_RECIPE_LIST_AND_FINISH
+import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment
 import com.maragues.planner.recipes.RecipesListActivity
 import com.maragues.planner.ui.utils.ProgressFragmentDialog
 import com.maragues.planner_kotlin.R
@@ -39,12 +40,12 @@ import javax.inject.Inject
 /**
  * Created by miguelaragues on 6/1/18.
  */
-class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
+class CreateRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject
-    internal lateinit var viewModelFactory: NewRecipeViewModel.Factory
+    internal lateinit var viewModelFactory: CreateRecipeViewModel.Factory
 
-    private lateinit var viewModel: NewRecipeViewModel
+    private lateinit var viewModel: CreateRecipeViewModel
 
     @Inject
     internal lateinit var navigator: RecipeFromLinkNavigator
@@ -55,7 +56,7 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
 
     companion object {
         fun createIntent(@NonNull context: Context): Intent {
-            return Intent(context, NewRecipeActivity::class.java)
+            return Intent(context, CreateRecipeActivity::class.java)
         }
 
         fun createIntentAndParseLink(@NonNull context: Context, @NonNull url: CharSequence): Intent {
@@ -144,7 +145,7 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private fun subscribeToViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewRecipeViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CreateRecipeViewModel::class.java)
         disposables().add(viewModel.viewStateObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -239,19 +240,19 @@ class NewRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private fun hideScrapInProgress() {
-        if (progressDialog != null) {
-            progressDialog?.dismiss()
+        progressDialog?.dismiss()
 
-            progressDialog = null
-        }
+        progressDialog = null
     }
 
     private fun findProgressDialogDisplayed() =
             supportFragmentManager.findFragmentByTag(ProgressFragmentDialog.TAG) as DialogFragment?
 
     private fun tintLinkCompoundDrawable() {
-        val linkColor = newRecipeTitle.linkTextColors.defaultColor
-        newRecipeTitle.compoundDrawables[2].setColorFilter(linkColor, PorterDuff.Mode.SRC_IN)
+        newRecipeTitle.compoundDrawables[2]
+                .setColorFilter(
+                        ContextCompat.getColor(this, R.color.linkColor),
+                        PorterDuff.Mode.SRC_IN)
     }
 
 

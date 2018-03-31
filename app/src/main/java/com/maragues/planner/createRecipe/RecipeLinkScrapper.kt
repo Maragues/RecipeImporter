@@ -1,4 +1,4 @@
-package com.maragues.planner.recipeFromLink
+package com.maragues.planner.createRecipe
 
 import io.reactivex.Single
 import org.jsoup.Jsoup

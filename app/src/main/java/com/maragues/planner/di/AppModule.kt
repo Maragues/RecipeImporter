@@ -1,6 +1,6 @@
 package com.maragues.planner.di
 
-import com.maragues.planner.test.utils.DebugLoggingTree
+import com.maragues.planner.utils.DebugLoggingTree
 import dagger.Module
 import dagger.Provides
 import timber.log.Timber
