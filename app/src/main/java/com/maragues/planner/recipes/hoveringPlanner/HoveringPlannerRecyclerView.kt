@@ -8,6 +8,8 @@ import android.view.DragEvent
 import android.view.DragEvent.ACTION_DRAG_ENDED
 import android.view.DragEvent.ACTION_DRAG_STARTED
 import android.view.View
+import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerRecyclerView.Companion
+import com.maragues.planner.recipes.hoveringPlanner.HoveringPlannerRecyclerView.Companion.COLUMNS
 import com.maragues.planner.ui.recyclerView.RowsAndColumnsItemDecoration
 import com.maragues.planner_kotlin.R.dimen
 
@@ -18,15 +20,19 @@ import com.maragues.planner_kotlin.R.dimen
  * Created by miguelaragues on 27/1/18.
  */
 class HoveringPlannerRecyclerView
-    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : RecyclerView(context, attrs, defStyleAttr) {
     companion object {
-        const val COLUMNS = 2
+        const val COLUMNS = 3
+        const val SPAN_COUNT = 7
         const val FADE_OUT_DELAY_MILLIS = 2000L
     }
 
     init {
-        layoutManager = GridLayoutManager(context, COLUMNS)
+        val gridLayoutManager = GridLayoutManager(context, SPAN_COUNT)
+        gridLayoutManager.spanSizeLookup = HoverSpanSizeLookup()
+        layoutManager = gridLayoutManager
+
         decorateRecyclerView()
     }
 
@@ -51,5 +57,16 @@ class HoveringPlannerRecyclerView
 
         return false
     }
+}
 
+private class HoverSpanSizeLookup : GridLayoutManager.SpanSizeLookup() {
+    init {
+        isSpanIndexCacheEnabled = true
+    }
+
+    override fun getSpanSize(position: Int): Int {
+        return if (isHeader(position)) 1 else 3
+    }
+
+    fun isHeader(position: Int): Boolean = position % COLUMNS == 0
 }
