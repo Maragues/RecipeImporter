@@ -106,6 +106,7 @@ internal class HoveringWeekPlannerAdapter(val mealSlotsAndRecipes: Map<MealSlot,
     private fun getItem(position: Int): MealSlot {
         val row = position / COLUMNS
 
+        //return a mealSlot corresponding to that row so that we can read the LocalDate
         if (getItemViewType(position) == TYPE_HEADER) return mealSlots.elementAt(row * 2 + 1)
 
         return mealSlots.elementAt(position - row - 1)
