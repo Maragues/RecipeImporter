@@ -13,9 +13,9 @@ class RecipesListModule {
         @JvmStatic
         @Provides
         internal fun providesTagSelectedListener(
-                activity: RecipesListActivity,
+                recipesListFragment: RecipesListFragment,
                 viewModelFactory: RecipesListViewModel.Factory): TagSelectedListener {
-            return ViewModelProviders.of(activity, viewModelFactory).get(RecipesListViewModel::class.java)
+            return ViewModelProviders.of(recipesListFragment, viewModelFactory).get(RecipesListViewModel::class.java)
         }
     }
 }

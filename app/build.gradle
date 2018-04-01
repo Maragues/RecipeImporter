@@ -107,4 +107,5 @@ dependencies {
 configurations.all {
     resolutionStrategy {
         force "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
-    }}
+    }
+}

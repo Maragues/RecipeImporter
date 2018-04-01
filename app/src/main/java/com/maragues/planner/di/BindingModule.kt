@@ -2,6 +2,8 @@ package com.maragues.planner.di
 
 import com.maragues.planner.createRecipe.CreateRecipeActivity
 import com.maragues.planner.createRecipe.CreateRecipeActivityModule
+import com.maragues.planner.home.HomeActivity
+import com.maragues.planner.home.HomeActivityModule
 import com.maragues.planner.recipes.RecipesListActivity
 import com.maragues.planner.recipes.RecipesListModule
 import com.maragues.planner.showRecipe.ShowRecipeActivity
@@ -17,6 +19,10 @@ import dagger.android.ContributesAndroidInjector
 abstract class BindingModule {
 
     @ActivityScope
+    @ContributesAndroidInjector(modules = arrayOf(HomeActivityModule::class))
+    internal abstract fun contributeHomeActivity(): HomeActivity
+
+    @ActivityScope
     @ContributesAndroidInjector(modules = arrayOf(CreateRecipeActivityModule::class))
     internal abstract fun contributeNewRecipeFromLinkActivity(): CreateRecipeActivity
 
@@ -24,8 +30,8 @@ abstract class BindingModule {
     @ContributesAndroidInjector(modules = arrayOf(ShowRecipeActivityModule::class))
     internal abstract fun contributeShowRecipeFromLinkActivity(): ShowRecipeActivity
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(RecipesListModule::class))
-    internal abstract fun contributeRecipesListActivity(): RecipesListActivity
+//    @ActivityScope
+//    @ContributesAndroidInjector(modules = arrayOf(RecipesListModule::class))
+//    internal abstract fun contributeRecipesListActivity(): RecipesListActivity
 
 }

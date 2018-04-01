@@ -19,6 +19,7 @@ import com.maragues.planner_kotlin.R
 import kotlinx.android.synthetic.main.item_recipe.view.dragHandle
 import kotlinx.android.synthetic.main.item_recipe.view.recipeImage
 import kotlinx.android.synthetic.main.item_recipe.view.recipeTitle
+import timber.log.Timber
 
 /**
  * Created by miguelaragues on 6/1/18.
@@ -38,7 +39,9 @@ internal class RecipesAdapter(val items: List<Recipe>, val listener: (Recipe) ->
 
         fun bind(recipe: Recipe, listener: (Recipe) -> Unit) = with(itemView) {
             dragListener.recipeId = recipe.id!!
-            dragHandle.setOnTouchListener(dragListener)
+            itemView.dragHandle.setOnTouchListener(dragListener)
+
+            Timber.d("Setting draglistener on recipe "+recipe.title)
 
             title.text = recipe.title
             imageView.loadUrl(recipe.screenshot)
