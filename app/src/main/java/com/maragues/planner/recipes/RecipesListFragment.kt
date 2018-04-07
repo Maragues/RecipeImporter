@@ -2,7 +2,6 @@ package com.maragues.planner.recipes
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.chip.Chip
 import android.support.v4.app.Fragment
@@ -32,21 +31,13 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_recipes_list.recipesListFab
-import kotlinx.android.synthetic.main.content_recipes_list.plannerFragment
 import kotlinx.android.synthetic.main.content_recipes_list.recipeList
 import kotlinx.android.synthetic.main.content_recipes_list.recipeListFilterTagGroup
 import kotlinx.android.synthetic.main.content_recipes_list.recipeListRoot
 import kotlinx.android.synthetic.main.content_recipes_list.recipeListTagsFiltered
-import timber.log.Timber
 import javax.inject.Inject
 
 class RecipesListFragment : BaseFragment(), HasSupportFragmentInjector {
-
-    companion object {
-        fun createIntentAfterAddingRecipe(context: Context): Intent {
-            return Intent(context, RecipesListActivity::class.java)
-        }
-    }
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>

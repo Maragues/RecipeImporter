@@ -21,7 +21,7 @@ import com.maragues.planner.common.loadUrl
 import com.maragues.planner.common.setTextIfEmpty
 import com.maragues.planner.createRecipe.RecipeFromLinkNavigator.Companion.NAVIGATE_TO_RECIPE_LIST_AND_FINISH
 import com.maragues.planner.createRecipe.addTag.AddTagDialogFragment
-import com.maragues.planner.recipes.RecipesListActivity
+import com.maragues.planner.home.HomeActivity
 import com.maragues.planner.ui.utils.ProgressFragmentDialog
 import com.maragues.planner_kotlin.R
 import dagger.android.AndroidInjection
@@ -137,7 +137,7 @@ class CreateRecipeActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private fun navigateToRecipeListAndFinish() {
-        startActivity(RecipesListActivity.createIntentAfterAddingRecipe(this))
+        startActivity(HomeActivity.createIntentAfterAddingRecipe(this))
 
         finish()
     }

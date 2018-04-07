@@ -20,9 +20,6 @@
       </intent-filter>
     </activity>
 
-    <activity android:name="com.maragues.planner.recipes.RecipesListActivity">
-    </activity>
-
     <activity
       android:launchMode="singleTop"
       android:name="com.maragues.planner.createRecipe.CreateRecipeActivity">

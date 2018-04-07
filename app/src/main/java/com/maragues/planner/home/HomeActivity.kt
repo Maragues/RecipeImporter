@@ -1,5 +1,7 @@
 package com.maragues.planner.home
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -24,6 +26,11 @@ import kotlinx.android.synthetic.main.activity_recipes_list.toolbar
 import javax.inject.Inject
 
 class HomeActivity : BaseActivity(), HasSupportFragmentInjector {
+    companion object {
+        fun createIntentAfterAddingRecipe(context: Context): Intent {
+            return Intent(context, HomeActivity::class.java)
+        }
+    }
 
     lateinit var viewPager: ViewPager
 
