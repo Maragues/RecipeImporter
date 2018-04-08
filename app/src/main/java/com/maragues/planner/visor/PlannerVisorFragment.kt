@@ -5,10 +5,12 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.HORIZONTAL
+import android.support.v7.widget.RecyclerView.OnItemTouchListener
 import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.RecyclerView.VERTICAL
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.maragues.planner.common.BaseFragment
@@ -54,12 +56,16 @@ class PlannerVisorFragment : BaseFragment() {
 
         plannerDaysRecyclerView.layoutManager = daysLayoutManager
         plannerDaysRecyclerView.adapter = DaysAdapter()
+
+        plannerDaysRecyclerView.addOnItemTouchListener(scrollDisabler)
     }
 
     private fun initWeeksRecyclerView() {
         val weeksLayoutManager = LinearLayoutManager(context, HORIZONTAL, false)
         plannerWeeksRecyclerView.layoutManager = weeksLayoutManager
         plannerWeeksRecyclerView.adapter = WeeksAdapter()
+
+        plannerWeeksRecyclerView.addOnItemTouchListener(scrollDisabler)
     }
 
     private fun initMealsRecyclerView() {
@@ -69,6 +75,7 @@ class PlannerVisorFragment : BaseFragment() {
 
         val adapter = MealsAdapter()
         plannerMealsRecyclerView.adapter = adapter
+        plannerMealsRecyclerView.addOnScrollListener(mealsScrollListener)
 
         disposables().add(plannerMealsRecyclerView.columnHeightObservable()
                 .onTerminateDetach()
@@ -100,16 +107,26 @@ class PlannerVisorFragment : BaseFragment() {
     private fun synchronizeRecyclerViews() {
     }
 
-    val DaysScrollListener = object : OnScrollListener() {
+    val mealsScrollListener = object : OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
 
+            plannerWeeksRecyclerView.scrollBy(dx, 0)
+            plannerDaysRecyclerView.scrollBy(0, dy)
+        }
     }
 
-    val WeeksScrollListener = object : OnScrollListener() {
+    val scrollDisabler = object : OnItemTouchListener {
+        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
 
-    }
+        }
 
-    val ContentScrollListener = object : OnScrollListener() {
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+        }
 
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+            return true
+        }
     }
 
     class MealsAdapter : RecyclerView.Adapter<MealsViewHolder>() {
