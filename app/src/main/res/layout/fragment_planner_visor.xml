@@ -5,6 +5,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:paddingRight="@dimen/activity_horizontal_margin"
   app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
   <android.support.constraint.Guideline
@@ -12,14 +13,14 @@
     android:layout_width="1dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.15"/>
+    app:layout_constraintGuide_percent="0.1"/>
 
   <android.support.constraint.Guideline
     android:id="@+id/plannerHorizontalGuideline"
     android:layout_width="1dp"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.1"/>
+    app:layout_constraintGuide_percent="0.05"/>
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/plannerDaysRecyclerView"

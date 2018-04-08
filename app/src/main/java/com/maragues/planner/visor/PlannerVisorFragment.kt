@@ -1,12 +1,15 @@
 package com.maragues.planner.visor
 
+import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Rect
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.HORIZONTAL
+import android.support.v7.widget.RecyclerView.ItemDecoration
 import android.support.v7.widget.RecyclerView.OnItemTouchListener
 import android.support.v7.widget.RecyclerView.OnScrollListener
+import android.support.v7.widget.RecyclerView.State
 import android.support.v7.widget.RecyclerView.VERTICAL
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
@@ -16,26 +19,38 @@ import android.view.ViewGroup
 import com.maragues.planner.common.BaseFragment
 import com.maragues.planner.common.inflate
 import com.maragues.planner.visor.PlannerVisorFragment.DaysAdapter.DayViewHolder
-import com.maragues.planner.visor.PlannerVisorFragment.MealsAdapter.MealsViewHolder
 import com.maragues.planner.visor.PlannerVisorFragment.WeeksAdapter.WeekViewHolder
+import com.maragues.planner.visor.PlannerVisorViewModel.Factory
 import com.maragues.planner_kotlin.R
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_planner_visor.plannerDaysRecyclerView
 import kotlinx.android.synthetic.main.fragment_planner_visor.plannerMealsRecyclerView
 import kotlinx.android.synthetic.main.fragment_planner_visor.plannerWeeksRecyclerView
 import kotlinx.android.synthetic.main.item_planner_day.view.itemPlannerDay
-import kotlinx.android.synthetic.main.item_planner_meal.view.itemPlannerMeal
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
+import javax.inject.Inject
 
 class PlannerVisorFragment : BaseFragment() {
+
+    @Inject
+    internal lateinit var viewModelFactory: Factory
+
+    private lateinit var viewModel: PlannerVisorViewModel
+
+    private val mealsAdapter = MealsAdapter()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_planner_visor, container, false);
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PlannerVisorViewModel::class.java)
 
         initDaysRecyclerView()
 
@@ -47,17 +62,21 @@ class PlannerVisorFragment : BaseFragment() {
     }
 
     private fun initDaysRecyclerView() {
-        val daysLayoutManager = GridLayoutManager(context, 1, VERTICAL, false)
-        /*daysLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return 3
-            }
-        }*/
+        val daysLayoutManager = LinearLayoutManager(context, VERTICAL, false)
 
         plannerDaysRecyclerView.layoutManager = daysLayoutManager
         plannerDaysRecyclerView.adapter = DaysAdapter()
 
         plannerDaysRecyclerView.addOnItemTouchListener(scrollDisabler)
+        plannerDaysRecyclerView.addItemDecoration(object : ItemDecoration() {
+            val separation: Int = context!!.resources.getDimensionPixelSize(R.dimen.visor_meals_separation)
+
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: State) {
+                val position = parent.getChildLayoutPosition(view)
+
+                outRect.top = if (position == 0) 0 else separation
+            }
+        })
     }
 
     private fun initWeeksRecyclerView() {
@@ -66,15 +85,24 @@ class PlannerVisorFragment : BaseFragment() {
         plannerWeeksRecyclerView.adapter = WeeksAdapter()
 
         plannerWeeksRecyclerView.addOnItemTouchListener(scrollDisabler)
+        plannerWeeksRecyclerView.addItemDecoration(object : ItemDecoration() {
+            val separation: Int = context!!.resources.getDimensionPixelSize(R.dimen.visor_meals_separation)
+
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: State) {
+                val position = parent.getChildLayoutPosition(view)
+
+                outRect.left = if (position == 0) 0 else separation
+                outRect.right = if (position == (parent.adapter?.itemCount?.minus(1))) 0 else separation
+            }
+        })
     }
 
     private fun initMealsRecyclerView() {
         val mealsLayoutManager = FixedGridLayoutManager()
-        mealsLayoutManager.setTotalColumnCount(5)
+        mealsLayoutManager.setTotalColumnCount(3)
         plannerMealsRecyclerView.layoutManager = mealsLayoutManager
 
-        val adapter = MealsAdapter()
-        plannerMealsRecyclerView.adapter = adapter
+        plannerMealsRecyclerView.adapter = mealsAdapter
         plannerMealsRecyclerView.addOnScrollListener(mealsScrollListener)
 
         disposables().add(plannerMealsRecyclerView.columnHeightObservable()
@@ -92,6 +120,29 @@ class PlannerVisorFragment : BaseFragment() {
                         Throwable::printStackTrace
                 )
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        disposables().add(viewModel.viewStateObservable()
+                .subscribeOn(Schedulers.io())
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { render(it) },
+                        Throwable::printStackTrace
+                ))
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        disposables().clear()
+    }
+
+    private fun render(viewState: PlannerVisorViewState) {
+        mealsAdapter.submitList(viewState.dayMeals.sortedDescending())
     }
 
     private fun onColumnHeightReceived(columnHeight: Int) {
@@ -126,66 +177,6 @@ class PlannerVisorFragment : BaseFragment() {
 
         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
             return true
-        }
-    }
-
-    class MealsAdapter : RecyclerView.Adapter<MealsViewHolder>() {
-
-        val meals: MutableList<String> = mutableListOf(
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
-        )
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealsViewHolder {
-            return MealsViewHolder(parent.inflate(R.layout.item_planner_meal))
-        }
-
-        override fun getItemCount() = meals.size
-
-        override fun onBindViewHolder(holder: MealsViewHolder, position: Int) = holder.bind(meals.get(position), columnWidth, columnHeight)
-
-        var columnWidth: Int? = null
-        fun setColumnWidth(columnWidth: Int) {
-            this.columnWidth = columnWidth
-        }
-
-        var columnHeight: Int? = null
-        fun setColumnHeight(columnHeight: Int) {
-            this.columnHeight = columnHeight
-        }
-
-        class MealsViewHolder(itemView: View) : ViewHolder(itemView) {
-            fun bind(day: String, columnWidth: Int?, columnHeight: Int?) {
-                itemView.itemPlannerMeal.text = day
-
-                if (columnWidth != null) itemView.layoutParams.width = columnWidth
-                if (columnHeight != null) itemView.layoutParams.height = columnHeight
-            }
-
         }
     }
 
@@ -230,7 +221,7 @@ class PlannerVisorFragment : BaseFragment() {
         }
     }
 
-    private class WeeksAdapter() : RecyclerView.Adapter<WeekViewHolder>() {
+    private class WeeksAdapter : RecyclerView.Adapter<WeekViewHolder>() {
 
         val weeks: MutableList<String> = mutableListOf("Previous Week", "Current Week", "Next Week")
 

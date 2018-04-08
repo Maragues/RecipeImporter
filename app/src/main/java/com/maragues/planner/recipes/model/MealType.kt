@@ -7,7 +7,7 @@ import com.maragues.planner.recipes.model.MealType.DINNER
  * Created by miguelaragues on 12/2/18.
  */
 enum class MealType {
-    LUNCH, DINNER
+    LUNCH, DINNER;
 }
 
 class MealTypeComparator : Comparator<MealType> {

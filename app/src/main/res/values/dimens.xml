@@ -14,4 +14,8 @@
   <dimen name="fab_margin">16dp</dimen>
 
   <dimen name="bottom_nav_elevation">8dp</dimen>
+
+  <!-- VISOR -->
+  <dimen name="visor_meals_lunch_dinner_margin">3dp</dimen>
+  <dimen name="visor_meals_separation">4dp</dimen>
 </resources>

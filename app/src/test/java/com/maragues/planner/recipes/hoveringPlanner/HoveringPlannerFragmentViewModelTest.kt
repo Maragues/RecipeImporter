@@ -18,7 +18,7 @@ import org.threeten.bp.LocalDate
  * Created by miguelaragues on 17/2/18.
  */
 class HoveringPlannerFragmentViewModelTest : BaseUnitTest() {
-    lateinit var viewModel: HoveringPlannerFragmentViewModel
+    private lateinit var viewModel: HoveringPlannerFragmentViewModel
 
     val mealSlotRepository: MealSlotRepository = mock()
 
