@@ -8,15 +8,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import android.view.Menu
 import android.view.MenuItem
 import com.maragues.planner.common.BaseActivity
 import com.maragues.planner.home.HomeActivity.NavigationAdapter.Companion.PLANNER_POSITION
 import com.maragues.planner.home.HomeActivity.NavigationAdapter.Companion.RECIPES_POSITION
 import com.maragues.planner.recipes.RecipesListFragment
+import com.maragues.planner.visor.PlannerVisorFragment
 import com.maragues.planner_kotlin.R
 import com.maragues.planner_kotlin.R.id
-import com.maragues.planner_kotlin.R.id.homeViewPage
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -73,13 +72,15 @@ class HomeActivity : BaseActivity(), HasSupportFragmentInjector {
     private class NavigationAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
         companion object {
             const val SECTIONS = 2
-            const val RECIPES_POSITION: Int = 0
+
+            const val RECIPES_POSITION = 0
             const val PLANNER_POSITION = 1
         }
 
         override fun getItem(position: Int): Fragment {
             when (position) {
                 RECIPES_POSITION -> return RecipesListFragment()
+                PLANNER_POSITION -> return PlannerVisorFragment()
                 else -> {
                 }
             }
