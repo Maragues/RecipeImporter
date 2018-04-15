@@ -17,5 +17,6 @@
 
   <!-- VISOR -->
   <dimen name="visor_meals_lunch_dinner_margin">3dp</dimen>
-  <dimen name="visor_meals_separation">4dp</dimen>
+  <dimen name="visor_meals_separation">8dp</dimen>
+  <dimen name="drag_handle_margin">5dp</dimen>
 </resources>

@@ -32,4 +32,11 @@ class SandboxTest : BaseUnitTest() {
         tagSubject.onNext(Tag("1"))
         tagSubject.onNext(Tag("2"))
     }
+
+    @Test
+fun sublist(){
+        val singleList = listOf(1)
+
+        Timber.d("list "+singleList+", sublist "+singleList.subList(1, singleList.size))
+    }
 }

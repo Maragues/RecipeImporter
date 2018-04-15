@@ -12,9 +12,11 @@ import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.RecyclerView.State
 import android.support.v7.widget.RecyclerView.VERTICAL
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnDragListener
 import android.view.ViewGroup
 import com.maragues.planner.common.BaseFragment
 import com.maragues.planner.common.inflate
@@ -25,14 +27,18 @@ import com.maragues.planner_kotlin.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_planner_visor.plannerDaysRecyclerView
+import kotlinx.android.synthetic.main.fragment_planner_visor.plannerDragBottomZone
+import kotlinx.android.synthetic.main.fragment_planner_visor.plannerDragRightZone
 import kotlinx.android.synthetic.main.fragment_planner_visor.plannerMealsRecyclerView
 import kotlinx.android.synthetic.main.fragment_planner_visor.plannerWeeksRecyclerView
 import kotlinx.android.synthetic.main.item_planner_day.view.itemPlannerDay
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.WeekFields
+import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 class PlannerVisorFragment : BaseFragment() {
 
@@ -105,6 +111,8 @@ class PlannerVisorFragment : BaseFragment() {
         plannerMealsRecyclerView.adapter = mealsAdapter
         plannerMealsRecyclerView.addOnScrollListener(mealsScrollListener)
 
+        viewModel.onMealReplacedObservable(mealsAdapter.mealReplacedObservable())
+
         disposables().add(plannerMealsRecyclerView.columnHeightObservable()
                 .onTerminateDetach()
                 .subscribe(
@@ -120,6 +128,79 @@ class PlannerVisorFragment : BaseFragment() {
                         Throwable::printStackTrace
                 )
         )
+
+        initDragZones()
+    }
+
+    private fun initDragZones() {
+        plannerDaysRecyclerView.setOnDragListener(object : OnDragListener {
+            private var yEntered: Float = 0f
+            private val xMultiplier = 5
+
+            override fun onDrag(v: View, event: DragEvent): Boolean {
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        yEntered = event.y
+
+                        return true
+                    }
+                    DragEvent.ACTION_DRAG_ENTERED -> return true
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        val dX = (v.width - event.x).absoluteValue
+                        val dY = event.y - yEntered
+
+                        /*
+                        I tried to set an interval + invoking smoothScrollBy and it didn't work.
+
+                        I also tried to queue it through a handler and it also didn't work
+                         */
+                        plannerMealsRecyclerView.smoothScrollBy(-(dX.toInt() * xMultiplier), dY.toInt())
+                    }
+                }
+                return false
+            }
+        })
+
+        plannerDragRightZone.setOnDragListener(object : OnDragListener {
+            private var yEntered: Float = 0f
+
+            override fun onDrag(v: View, event: DragEvent): Boolean {
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        yEntered = event.y
+
+                        return true
+                    }
+                    DragEvent.ACTION_DRAG_ENTERED -> return true
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        val dY = event.y - yEntered
+
+                        plannerMealsRecyclerView.smoothScrollBy(event.x.toInt(), dY.toInt())
+                    }
+                }
+                return false
+            }
+        })
+
+        plannerWeeksRecyclerView.setOnDragListener(OnDragListener { v, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED, DragEvent.ACTION_DRAG_ENTERED -> return@OnDragListener true
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    plannerMealsRecyclerView.smoothScrollBy(0, -(v.height*3))
+                }
+            }
+            false
+        })
+
+        plannerDragBottomZone.setOnDragListener(OnDragListener { v, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED, DragEvent.ACTION_DRAG_ENTERED -> return@OnDragListener true
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    plannerMealsRecyclerView.smoothScrollBy(0, v.height)
+                }
+            }
+            false
+        })
     }
 
     override fun onResume() {

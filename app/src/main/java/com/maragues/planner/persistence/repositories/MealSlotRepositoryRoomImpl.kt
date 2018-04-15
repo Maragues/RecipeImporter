@@ -6,6 +6,7 @@ import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
 import com.maragues.planner.persistence.entities.Tag
 import com.maragues.planner.persistence.entities.TagAction
+import com.maragues.planner.persistence.relationships.MealSlotsAndRecipeIds
 import com.maragues.planner.persistence.room.MealSlotDao
 import com.maragues.planner.persistence.room.RecipeDao
 import com.maragues.planner.recipes.model.MealSlot
@@ -23,8 +24,12 @@ import javax.inject.Inject
 internal class MealSlotRepositoryRoomImpl
 @Inject constructor(val mealSlotDao: MealSlotDao,
                     val recipeDao: RecipeDao) : MealSlotRepository {
+    override fun replaceMeal(newMealSlot: MealSlotsAndRecipeIds) {
+        mealSlotDao.replaceAllRecipes(newMealSlot.date, newMealSlot.mealType, newMealSlot.recipeIds)
+    }
+
     override fun replaceRecipe(mealSlotReplaced: MealSlotRecipe, newRecipeId: Long) {
-        mealSlotDao.replaceRecipe(mealSlotReplaced.date, mealSlotReplaced.mealType, newRecipeId)
+        mealSlotDao.replaceRecipe(mealSlotReplaced.date, mealSlotReplaced.mealType, mealSlotReplaced.recipeId, newRecipeId)
     }
 
     override fun insert(mealSlotRecipe: MealSlotRecipe) {
@@ -57,7 +62,7 @@ internal class MealSlotRepositoryRoomImpl
                         val lunch = it.value.singleOrNull { it.mealType == LUNCH }
                                 ?: Meal.emptyLunch(it.key)
                         val dinner = it.value.singleOrNull { it.mealType == DINNER }
-                                ?:  Meal.emptyDinner(it.key)
+                                ?: Meal.emptyDinner(it.key)
 
                         DayMeals(it.key, lunch, dinner)
                     }

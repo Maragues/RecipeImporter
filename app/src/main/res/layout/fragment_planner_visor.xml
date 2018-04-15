@@ -5,7 +5,6 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:paddingRight="@dimen/activity_horizontal_margin"
   app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
   <android.support.constraint.Guideline
@@ -46,9 +45,43 @@
     android:id="@+id/plannerMealsRecyclerView"
     android:layout_width="0dp"
     android:layout_height="0dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/plannerVerticalGuideline"
     app:layout_constraintTop_toBottomOf="@id/plannerHorizontalGuideline"/>
+
+  <android.support.constraint.Guideline
+    android:id="@+id/plannerRightScrollZoneVerticalGuideline"
+    android:layout_width="1dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintGuide_percent="0.8"/>
+
+  <android.support.constraint.Guideline
+    android:id="@+id/plannerHorizontalBottomScrollGuideline"
+    android:layout_width="1dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.92"/>
+
+  <View
+    android:id="@+id/plannerDragRightZone"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="@id/plannerMealsRecyclerView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@id/plannerRightScrollZoneVerticalGuideline"
+    app:layout_constraintTop_toTopOf="@id/plannerMealsRecyclerView"/>
+
+  <View
+    android:id="@+id/plannerDragBottomZone"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="@id/plannerVerticalGuideline"
+    app:layout_constraintTop_toTopOf="@id/plannerHorizontalBottomScrollGuideline"/>
 
 </android.support.constraint.ConstraintLayout>

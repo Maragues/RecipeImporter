@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProvider
 import com.maragues.planner.common.BaseViewModel
 import com.maragues.planner.model.DayMeals
 import com.maragues.planner.model.Meal
+import com.maragues.planner.persistence.relationships.MealSlotsAndRecipeIds
 import com.maragues.planner.persistence.repositories.MealSlotRepository
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
@@ -39,6 +41,18 @@ class PlannerVisorViewModel(private val mealSlotRepository: MealSlotRepository) 
         }
 
         return outList
+    }
+
+    fun onMealReplacedObservable(mealReplacedObservable: Observable<MealSlotsAndRecipeIds>) {
+        disposables().add(
+                mealReplacedObservable
+                        .onTerminateDetach()
+                        .observeOn(Schedulers.io())
+                        .subscribe(
+                                mealSlotRepository::replaceMeal,
+                                Throwable::printStackTrace
+                        )
+        )
     }
 
     class Factory

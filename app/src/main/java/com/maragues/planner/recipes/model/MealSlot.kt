@@ -11,7 +11,7 @@ data class MealSlot(val date: LocalDate, val mealType: MealType) : Comparable<Me
             return MealTypeComparator().compare(mealType, other.mealType)
         }
 
-        return result;
+        return result
     }
 
     fun isLunch(): Boolean {

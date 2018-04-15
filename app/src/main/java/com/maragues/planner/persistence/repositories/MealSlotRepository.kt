@@ -3,6 +3,7 @@ package com.maragues.planner.persistence.repositories
 import com.maragues.planner.model.DayMeals
 import com.maragues.planner.persistence.entities.MealSlotRecipe
 import com.maragues.planner.persistence.entities.Recipe
+import com.maragues.planner.persistence.relationships.MealSlotsAndRecipeIds
 import com.maragues.planner.recipes.model.MealSlot
 import io.reactivex.Flowable
 import org.threeten.bp.LocalDate
@@ -17,6 +18,8 @@ interface MealSlotRepository {
     fun insert(mealSlotRecipe: MealSlotRecipe)
 
     fun replaceRecipe(mealSlotReplaced: MealSlotRecipe, newRecipeId: Long)
+
+    fun replaceMeal(newMealSlot: MealSlotsAndRecipeIds)
 
     fun dayMealsDayBetween(startDate: LocalDate, endDate: LocalDate): Flowable<List<DayMeals>>
 }

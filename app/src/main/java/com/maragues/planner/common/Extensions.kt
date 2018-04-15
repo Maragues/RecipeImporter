@@ -18,7 +18,7 @@ fun ViewGroup.inflate(layoutRes: Int): View {
 
 fun ImageView.loadUrl(url: String?,
                       @ColorRes colorPlaceHolder: Int = R.color.weekPlannerLunchBG) {
-    Picasso.with(context)
+    Picasso.get()
             .load(sanitizeUrl(url))
             .placeholder(colorPlaceHolder)
             .into(this)
